@@ -62,7 +62,7 @@ section.page.on{display:block}
 .chapter>header .no{font:600 12px/1 var(--font);letter-spacing:1px;color:var(--slate);background:rgba(255,255,255,.7);padding:5px 8px;border-radius:var(--r-sm)}
 .chapter>header h3{margin:0;font-size:22px}
 .chapter .body{padding:4px 20px 20px}
-.chapter h4{font-size:17px;margin:22px 0 8px;padding-left:10px;border-left:3px solid var(--primary)}
+.chapter h4{font-size:17px;margin:26px 0 8px}
 .chapter ul{padding-left:20px;margin:6px 0}
 .chapter li{margin:3px 0}
 .c1{background:var(--peach)}.c2{background:var(--sky)}.c3{background:var(--mint)}.c4{background:var(--lavender)}.c5{background:var(--yellow)}.c6{background:var(--rose)}.c7{background:var(--cream)}
@@ -123,7 +123,7 @@ details>div{padding:0 14px 12px}
 .score{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:14px;color:var(--slate);margin-top:8px}
 .score b{color:var(--ink);font-size:18px}
 .meter{flex:1 1 160px;height:6px;background:var(--surface);border-radius:999px;overflow:hidden;min-width:120px}
-.meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+.meter i{display:block;height:100%;background:var(--ok);transform:scaleX(0);transform-origin:left}
 .q{border:1px solid var(--hairline);border-radius:var(--r-lg);padding:16px 18px;margin:0 0 12px}
 .q.right{border-color:var(--ok);background:#f3fbf5}
 .q.wrong{border-color:var(--err);background:#fff5f5}
@@ -148,6 +148,33 @@ details>div{padding:0 14px 12px}
 .fb .exp{margin-top:4px;color:var(--slate)}
 .right .verdict{color:var(--ok)} .wrong .verdict{color:var(--err)}
 .empty{text-align:center;color:var(--steel);padding:40px 0}
+
+/* motion */
+:root{--ease:cubic-bezier(.22,.61,.36,1)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes drop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.015)}100%{transform:scale(1)}}
+section.page.on{animation:fade .35s var(--ease)}
+section.page.on .page-head,section.page.on .toc,section.page.on .fc-bar{animation:rise .45s var(--ease) backwards}
+section.page.on .chapter,section.page.on .sum,section.page.on .fc,section.page.on #ex-list>.ex,section.page.on .q{animation:rise .5s var(--ease) backwards}
+section.page.on .sum:nth-child(2),section.page.on .fc:nth-child(2),section.page.on .q:nth-child(2),section.page.on #ex-list>.ex:nth-child(2){animation-delay:.04s}
+section.page.on .sum:nth-child(3),section.page.on .fc:nth-child(3),section.page.on .q:nth-child(3),section.page.on #ex-list>.ex:nth-child(3){animation-delay:.08s}
+section.page.on .sum:nth-child(4),section.page.on .fc:nth-child(4),section.page.on .q:nth-child(4),section.page.on #ex-list>.ex:nth-child(4){animation-delay:.12s}
+section.page.on .sum:nth-child(n+5),section.page.on .fc:nth-child(n+5),section.page.on .q:nth-child(n+5),section.page.on #ex-list>.ex:nth-child(n+5){animation-delay:.16s}
+.tab,.chip,.btn,.opt,#side-nav a,.side-btn{transition:background-color .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease),box-shadow .2s var(--ease),transform .15s var(--ease)}
+.btn:active,.chip:active,.opt:active:not(:disabled),.side-btn:active,.tab:active{transform:scale(.97)}
+.side-btn:hover{box-shadow:0 8px 26px rgba(0,0,0,.24)}
+.fc{transition:border-color .2s var(--ease),box-shadow .2s var(--ease),background-color .25s var(--ease),transform .2s var(--ease)}
+.fc:hover{transform:translateY(-2px)}
+.fc.open .back{animation:drop .3s var(--ease)}
+details>summary::before{display:inline-block;transition:transform .2s var(--ease)}
+details[open]>div{animation:drop .3s var(--ease)}
+.q{transition:border-color .25s var(--ease),background-color .25s var(--ease)}
+section.page.on .q.right,section.page.on .q.wrong{animation:pop .35s var(--ease)}
+.fb.show{animation:drop .3s var(--ease)}
+.meter i{transition:transform .5s var(--ease)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 
 /* notes sidebar */
 .chapter h4,.chapter .ex{scroll-margin-top:68px}
@@ -1213,7 +1240,7 @@ function updateScore() {
   const vis = qzOrder.filter(i => qzCh === 'all' || String(Q[i].ch) === qzCh);
   const done = vis.filter(i => i in result), ok = done.filter(i => result[i]);
   $('#s-ok').textContent = ok.length; $('#s-done').textContent = done.length; $('#s-all').textContent = vis.length;
-  $('#s-bar').style.width = (vis.length ? ok.length / vis.length * 100 : 0) + '%';
+  $('#s-bar').style.transform = 'scaleX(' + (vis.length ? ok.length / vis.length : 0) + ')';
 }
 function grade(card, q, correct, fb) {
   result[q.id] = correct;
