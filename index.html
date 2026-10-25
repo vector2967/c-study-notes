@@ -1,0 +1,1191 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C언어 공부 노트 · 창의공학설계</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%235645d4%22/><text x=%2250%22 y=%2272%22 font-size=%2264%22 font-family=%22sans-serif%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22white%22>C</text></svg>">
+<meta name="description" content="창의공학설계 C언어 기초 (Ch.1~7) 정리 노트, 요약 노트, 암기 노트, 연습문제, 문제은행">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* Design tokens: Notion (VoltAgent/awesome-design-md/design-md/notion) */
+:root{
+  --primary:#5645d4; --primary-pressed:#4534b3; --on-primary:#fff;
+  --navy:#0a1530; --navy-mid:#1a2a52; --link:#0075de;
+  --canvas:#fff; --surface:#f6f5f4; --surface-soft:#fafaf9;
+  --hairline:#e5e3df; --hairline-strong:#c8c4be;
+  --ink:#1a1a1a; --charcoal:#37352f; --slate:#5d5b54; --steel:#787671; --stone:#a4a097;
+  --ok:#1aae39; --warn:#dd5b00; --err:#e03131;
+  --peach:#ffe8d4; --rose:#fde0ec; --mint:#d9f3e1; --lavender:#e6e0f5; --sky:#dcecfa; --yellow:#fef7d6; --cream:#f8f5e8;
+  --code-bg:#1e1e2e; --code-ink:#e4e4ef;
+  --r-sm:6px; --r-md:8px; --r-lg:12px;
+  --font:"Pretendard Variable",Pretendard,Inter,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Consolas,"D2Coding",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--canvas);color:var(--charcoal);font:16px/1.65 var(--font);word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--link)}
+h1,h2,h3,h4{color:var(--ink);font-weight:600;letter-spacing:-.3px;line-height:1.25}
+code{font-family:var(--mono);font-size:.88em;background:var(--surface);border:1px solid var(--hairline);border-radius:4px;padding:1px 5px;color:#c7254e}
+pre{margin:12px 0;background:var(--code-bg);color:var(--code-ink);border-radius:var(--r-md);padding:14px 16px;overflow-x:auto;font:13.5px/1.6 var(--mono);-webkit-overflow-scrolling:touch}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+pre.out{background:var(--surface);color:var(--ink);border:1px solid var(--hairline)}
+
+/* header + nav */
+.hero{background:var(--navy);color:#fff;padding:40px 16px 28px}
+.hero-in{max-width:920px;margin:0 auto}
+.hero .eyebrow{font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#a4a097}
+.hero h1{color:#fff;font-size:clamp(28px,6vw,44px);margin:6px 0 8px;letter-spacing:-1px}
+.hero p{margin:0;color:#c9c7c2;max-width:620px}
+.dots{display:flex;gap:6px;margin-top:18px}
+.dots i{width:10px;height:10px;border-radius:50%;display:block}
+nav.tabs{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(10px);-webkit-backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--hairline)}
+.tabs-in{max-width:920px;margin:0 auto;display:flex;gap:4px;padding:8px 16px;overflow-x:auto;scrollbar-width:none}
+.tabs-in::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:0;background:none;font:500 14px/1 var(--font);color:var(--slate);padding:10px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.tab:hover{background:var(--surface)}
+.tab[aria-selected=true]{background:var(--primary);color:#fff}
+main{max-width:920px;margin:0 auto;padding:24px 16px 80px}
+section.page{display:none;scroll-margin-top:56px}
+section.page.on{display:block}
+.page-head h2{font-size:clamp(24px,5vw,32px);margin:8px 0 4px}
+.page-head p{margin:0 0 20px;color:var(--steel)}
+
+/* chapter toc + blocks */
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 24px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--hairline);background:var(--canvas);color:var(--charcoal);border-radius:999px;padding:6px 12px;font:500 13px/1.2 var(--font);text-decoration:none;cursor:pointer}
+.chip:hover{border-color:var(--hairline-strong)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chapter{border:1px solid var(--hairline);border-radius:var(--r-lg);margin:0 0 24px;overflow:hidden;scroll-margin-top:64px}
+.chapter>header{padding:18px 20px;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.chapter>header .no{font:600 12px/1 var(--font);letter-spacing:1px;color:var(--slate);background:rgba(255,255,255,.7);padding:5px 8px;border-radius:var(--r-sm)}
+.chapter>header h3{margin:0;font-size:22px}
+.chapter .body{padding:4px 20px 20px}
+.chapter h4{font-size:17px;margin:22px 0 8px;padding-left:10px;border-left:3px solid var(--primary)}
+.chapter ul{padding-left:20px;margin:6px 0}
+.chapter li{margin:3px 0}
+.c1{background:var(--peach)}.c2{background:var(--sky)}.c3{background:var(--mint)}.c4{background:var(--lavender)}.c5{background:var(--yellow)}.c6{background:var(--rose)}.c7{background:var(--cream)}
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0;border:1px solid var(--hairline);border-radius:var(--r-md)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:420px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--hairline);vertical-align:top}
+th{background:var(--surface);color:var(--ink);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.mono,.mono{font-family:var(--mono);font-size:13px}
+.note{background:var(--surface);border-radius:var(--r-md);padding:10px 14px;margin:10px 0;font-size:14px;color:var(--slate)}
+.note b{color:var(--ink)}
+.warn{background:#fff4e8;color:#793400}
+svg.sym{width:60px;height:36px;color:var(--ink);display:block}
+
+/* summary */
+.sum-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.sum{border-radius:var(--r-lg);padding:18px;border:1px solid rgba(0,0,0,.04)}
+.sum h3{margin:0 0 10px;font-size:18px}
+.sum ul{margin:0;padding-left:18px;font-size:14.5px}
+.sum li{margin:4px 0}
+.kw{background:rgba(86,69,212,.12);color:var(--primary-pressed);font-weight:600;border-radius:4px;padding:0 4px}
+
+/* flashcards */
+.fc-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px}
+.btn{border:1px solid var(--hairline);background:var(--canvas);color:var(--ink);font:500 14px/1 var(--font);padding:10px 14px;border-radius:var(--r-md);cursor:pointer}
+.btn:hover{background:var(--surface)}
+.btn.pri{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn.pri:hover{background:var(--primary-pressed)}
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.fc{position:relative;min-height:140px;border:1px solid var(--hairline);border-radius:var(--r-lg);padding:16px;background:var(--canvas);cursor:pointer;text-align:left;font:inherit;color:inherit;display:flex;flex-direction:column;gap:8px;transition:border-color .15s,box-shadow .15s}
+.fc:hover{border-color:var(--hairline-strong);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.fc .tag{font:600 11px/1 var(--font);letter-spacing:.5px;color:var(--steel)}
+.fc .front{font-weight:600;color:var(--ink);font-size:16px}
+.fc .back{display:none;color:var(--charcoal);font-size:14.5px;border-top:1px dashed var(--hairline);padding-top:8px}
+.fc.open{background:var(--surface-soft);border-color:var(--primary)}
+.fc.open .back{display:block}
+.fc .hint{margin-top:auto;font-size:12px;color:var(--steel)}
+.fc.open .hint{display:none}
+
+/* exercises */
+.ex{border:1px solid var(--hairline);border-radius:var(--r-lg);margin:0 0 16px;overflow:hidden}
+.ex>.ex-h{display:flex;gap:10px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--hairline);flex-wrap:wrap}
+.ex .badge{font:600 12px/1 var(--font);padding:6px 8px;border-radius:var(--r-sm);color:var(--ink)}
+.ex h3{margin:0;font-size:17px}
+.ex .ex-b{padding:14px 18px}
+.ex .ex-b p{margin:6px 0}
+details{border:1px solid var(--hairline);border-radius:var(--r-md);margin:10px 0;background:var(--surface-soft)}
+details>summary{cursor:pointer;padding:10px 14px;font-weight:600;color:var(--ink);list-style:none}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"▸ ";color:var(--primary)}
+details[open]>summary::before{content:"▾ "}
+details>div{padding:0 14px 12px}
+.point{font-size:14px;color:var(--slate)}
+.point b{color:var(--primary-pressed)}
+
+/* quiz */
+.qz-top{position:sticky;top:53px;z-index:5;background:var(--canvas);padding:10px 0;border-bottom:1px solid var(--hairline);margin-bottom:16px}
+.score{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:14px;color:var(--slate);margin-top:8px}
+.score b{color:var(--ink);font-size:18px}
+.meter{flex:1 1 160px;height:6px;background:var(--surface);border-radius:999px;overflow:hidden;min-width:120px}
+.meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+.q{border:1px solid var(--hairline);border-radius:var(--r-lg);padding:16px 18px;margin:0 0 12px}
+.q.right{border-color:var(--ok);background:#f3fbf5}
+.q.wrong{border-color:var(--err);background:#fff5f5}
+.q .meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.q .meta span{font:600 11px/1 var(--font);padding:5px 7px;border-radius:4px;background:var(--surface);color:var(--slate)}
+.q .text{font-weight:600;color:var(--ink);margin:0 0 6px}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opts.ox{grid-template-columns:1fr 1fr;max-width:320px}
+.opt{text-align:left;border:1px solid var(--hairline);background:var(--canvas);border-radius:var(--r-md);padding:11px 14px;font:15px/1.4 var(--font);color:var(--ink);cursor:pointer;min-height:44px}
+.opt:hover:not(:disabled){border-color:var(--primary)}
+.opt:disabled{cursor:default}
+.opt.ans{border-color:var(--ok);background:#e6f7ea;font-weight:600}
+.opt.bad{border-color:var(--err);background:#fde8e8;text-decoration:line-through}
+.opts.ox .opt{text-align:center;font-size:20px;font-weight:700}
+.opt .m{font-family:var(--mono);font-size:14px}
+.sa{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.sa input{flex:1 1 180px;min-width:0;border:1px solid var(--hairline-strong);border-radius:var(--r-md);padding:11px 12px;font:16px var(--font)}
+.sa input:focus{outline:2px solid var(--primary);outline-offset:-1px;border-color:transparent}
+.fb{margin-top:10px;font-size:14.5px;display:none}
+.fb.show{display:block}
+.fb .verdict{font-weight:700}
+.fb .exp{margin-top:4px;color:var(--slate)}
+.right .verdict{color:var(--ok)} .wrong .verdict{color:var(--err)}
+.empty{text-align:center;color:var(--steel);padding:40px 0}
+
+footer{border-top:1px solid var(--hairline);color:var(--steel);font-size:13px;text-align:center;padding:24px 16px}
+
+@media (max-width:600px){
+  body{font-size:15.5px}
+  .hero{padding:28px 16px 20px}
+  .chapter>header{padding:14px 16px}
+  .chapter .body,.ex .ex-b{padding:4px 16px 16px}
+  .ex>.ex-h{padding:12px 16px}
+  pre{font-size:12.5px;padding:12px}
+  .qz-top{position:static}
+  .tab{padding:9px 12px}
+}
+</style>
+</head>
+<body>
+
+<div class="hero"><div class="hero-in">
+  <div class="eyebrow">창의공학설계 · Adventure Design</div>
+  <h1>C언어 기초 공부 노트</h1>
+  <p>Chapter 01 ~ 07 · 프로그래밍 언어 개요부터 반복문까지. 정리 → 요약 → 암기 → 연습 → 문제은행 순서로 공부하세요.</p>
+  <div class="dots"><i style="background:#dd5b00"></i><i style="background:#ff64c8"></i><i style="background:#7b3ff2"></i><i style="background:#2a9d99"></i><i style="background:#1aae39"></i><i style="background:#f5d75e"></i></div>
+</div></div>
+
+<nav class="tabs" aria-label="노트 종류"><div class="tabs-in" role="tablist">
+  <button class="tab" role="tab" data-p="notes">정리 노트</button>
+  <button class="tab" role="tab" data-p="summary">요약 노트</button>
+  <button class="tab" role="tab" data-p="memo">암기 노트</button>
+  <button class="tab" role="tab" data-p="practice">연습문제</button>
+  <button class="tab" role="tab" data-p="bank">문제은행</button>
+</div></nav>
+
+<main>
+
+<!-- ================= 정리 노트 ================= -->
+<section class="page" id="notes">
+  <div class="page-head"><h2>정리 노트</h2><p>수업 내용을 챕터별로 빠짐없이 정리했습니다.</p></div>
+  <div class="toc">
+    <a class="chip" href="#n1">01 언어 개요</a><a class="chip" href="#n2">02 C 시작</a><a class="chip" href="#n3">03 자료형·변수</a><a class="chip" href="#n4">04 전처리·입출력</a><a class="chip" href="#n5">05 연산자</a><a class="chip" href="#n6">06 조건</a><a class="chip" href="#n7">07 반복</a>
+  </div>
+
+  <article class="chapter" id="n1">
+    <header class="c1"><span class="no">CHAPTER 01</span><h3>프로그래밍 언어 개요</h3></header>
+    <div class="body">
+      <h4>프로그래밍 언어</h4>
+      <p>사람이 컴퓨터에게 지시할 명령어들을 기술하기 위해 만들어진 언어.</p>
+      <h4>언어 수준</h4>
+      <div class="tbl"><table>
+        <tr><th>구분</th><th>예시</th><th>특징</th></tr>
+        <tr><td>저급 언어</td><td>기계어, 어셈블리어</td><td>컴퓨터가 직접 이해하기 쉽지만 사람이 작성하고 읽기 어렵다.</td></tr>
+        <tr><td>중급 언어</td><td><b>C</b></td><td>하드웨어 제어와 고급 언어의 편의성을 함께 제공한다.</td></tr>
+        <tr><td>고급 언어</td><td>Java, C++, Python</td><td>사람이 작성하기 편리하며 실행을 위해 번역 과정이 필요하다.</td></tr>
+      </table></div>
+      <h4>컴파일러 vs 인터프리터</h4>
+      <div class="tbl"><table>
+        <tr><th>구분</th><th>컴파일러</th><th>인터프리터</th></tr>
+        <tr><td>방식</td><td>명령어 <b>전체를 한 번에</b> 기계어로 번역</td><td>명령어를 <b>한 줄씩</b> 읽고 번역해 실행</td></tr>
+        <tr><td>장점</td><td>일반적으로 속도가 더 빠르다</td><td>컴파일 단계를 거치지 않는다</td></tr>
+        <tr><td>단점</td><td>원시 프로그램이 크면 번역에 시간이 오래 걸림</td><td>실행 시간이 느림</td></tr>
+        <tr><td>예시</td><td>C</td><td>Python</td></tr>
+      </table></div>
+      <h4>문자 표현 방식: ASCII vs UNICODE</h4>
+      <ul>
+        <li><b>코드</b>의 의미 — ① 프로그래밍 코드 ② 사람의 언어를 기계어로 바꾼 것</li>
+        <li><b>ASCII</b> — 숫자·영어 1byte / 한글 2byte, 8bit 중 <b>7bit</b>만 데이터 비트로 사용. 예: <code>'A' = 65</code>, <code>'a' = 97</code></li>
+        <li><b>UNICODE</b> — 전 세계 모든 문자 2byte, 전 세계 문자를 일관되게 표현하기 위해 만들어짐</li>
+      </ul>
+      <div class="note"><b>참고</b> — 위 바이트 수는 수업 기준입니다. 실제 UTF-8은 문자에 따라 1~4byte 가변 길이입니다. 시험은 수업 기준으로!</div>
+      <h4>알고리즘</h4>
+      <ul>
+        <li>문제를 해결하기 위한 절차·방법으로, 명확히 정의된 <b>유한 개</b>의 규칙과 절차의 모임</li>
+        <li><b>효율성</b>을 중요시한다</li>
+        <li>만드는 원리: <b>문제분해, 순차, 조건, 반복</b></li>
+        <li>표현 방법: <b>자연어, 의사코드, 순서도</b></li>
+      </ul>
+      <h4>소프트웨어 개발 과정</h4>
+      <ol>
+        <li><b>요구사항 분석</b> — 요구사항 또는 해결할 문제를 먼저 파악</li>
+        <li><b>설계</b> — 프로그램을 설계</li>
+        <li><b>구현</b> — 설계된 알고리즘에 따라 코딩</li>
+        <li><b>검증</b> — 작성된 프로그램을 테스트</li>
+        <li><b>유지보수</b> — 문서화하고 유지보수</li>
+      </ol>
+      <h4>기본 순서도 기호</h4>
+      <div class="tbl"><table>
+        <tr><th>기호</th><th>이름</th><th>용도</th></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,4 48,4 58,18 48,32 12,32 2,18"/></svg></td><td>준비 (Preparation)</td><td>변수 기억 장소 할당, 초기값 설정, 스위치·인덱스 레지스터 변경, 순환 처리 준비</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="56" height="24" rx="12"/></svg></td><td>단자 (Terminator)</td><td>순서도의 시작과 끝</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="6" width="52" height="24"/></svg></td><td>처리 (Process)</td><td>연산, 값 변경, 데이터 이동 등 실행할 작업</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><polygon points="14,6 58,6 46,30 2,30"/></svg></td><td>입출력 (Input/Output)</td><td>일반적인 입력 또는 출력 작업</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><polygon points="30,3 58,18 30,33 2,18"/></svg></td><td>조건·의사 결정 (Decision)</td><td>조건의 참·거짓 등에 따라 흐름이 분기됨</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" stroke="currentColor" stroke-width="2"><line x1="4" y1="18" x2="48" y2="18"/><polygon points="48,12 58,18 48,24" fill="currentColor"/></svg></td><td>흐름선 (Flow line)</td><td>기호 사이의 처리 순서와 진행 방향</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><circle cx="30" cy="18" r="14"/></svg></td><td>연결자 (Connector)</td><td><b>같은 페이지</b> 안에서 떨어진 흐름을 이름으로 연결</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,3 48,3 48,23 30,33 12,23"/></svg></td><td>페이지 연결자 (Off-page connector)</td><td><b>다른 페이지</b>로 이어지는 흐름의 출입구</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="18" x2="40" y2="18" stroke-dasharray="3 3"/><path d="M52 4 H42 V32 H52"/></svg></td><td>주석 (Comment)</td><td>보충 설명, 점선으로 해당 기호와 연결</td></tr>
+      </table></div>
+      <h4>추가 순서도 기호</h4>
+      <div class="tbl"><table>
+        <tr><th>기호</th><th>이름</th><th>용도</th></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4 H46 Q58 18 46 32 H14 L2 18 Z"/></svg></td><td>화면 표시 (Display)</td><td>결과나 메시지를 CRT·콘솔 등 화면에 출력</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><polygon points="4,14 56,4 56,32 4,32"/></svg></td><td>수동 입력 (Manual input)</td><td>키보드·스위치 등으로 사용자가 직접 값 입력</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="6" width="52" height="24"/><line x1="12" y1="6" x2="12" y2="30"/><line x1="48" y1="6" x2="48" y2="30"/></svg></td><td>정의된 처리 (Predefined process)</td><td>다른 곳에 정의된 서브프로그램·함수 호출</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4 H56 V27 Q43 21 30 27 T4 27 Z"/></svg></td><td>서류·출력 (Document)</td><td>문서나 종이 매체에 출력되는 결과</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><polygon points="8,4 52,4 30,33"/></svg></td><td>오프라인 기억장치 (Off-line storage)</td><td>오프라인 저장 매체에 레코드 기록</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><polygon points="8,4 52,4 30,33"/><line x1="23" y1="24" x2="37" y2="24"/></svg></td><td>병합 (Merge)</td><td>정렬된 둘 이상의 파일을 하나로 합침</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><polygon points="10,3 50,3 10,33 50,33"/></svg></td><td>대합 (Collate)</td><td>둘 이상의 파일을 결합해 다른 파일들을 만듦</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><polygon points="30,3 46,18 30,33 14,18"/><line x1="14" y1="18" x2="46" y2="18"/></svg></td><td>정렬 (Sort)</td><td>데이터를 일정한 기준에 따라 순서대로 배열</td></tr>
+        <tr><td><svg class="sym" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2"><polygon points="30,3 52,33 8,33"/></svg></td><td>추출 (Extract)</td><td>파일에서 필요한 부분만 분리하여 새 파일 생성</td></tr>
+      </table></div>
+      <h4>순서도 예시 — a부터 b까지의 합</h4>
+      <p class="point">START → <b>준비</b>(a, b, sum, i = 0) → <b>입력</b>(READ a, b) → <b>판단</b>(a &gt; b ?) — True면 tmp로 a, b 교환 → <b>반복</b>(i=a; i&lt;=b; i++) sum += i → <b>출력</b>(PRINT sum) → END</p>
+<pre><code>#include &lt;stdio.h&gt;
+
+int main(void) {
+    int a = 0, b = 0, sum = 0, i = 0;
+
+    printf("두 수를 입력하세요: ");
+    scanf("%d %d", &amp;a, &amp;b);
+
+    if (a &gt; b) {          /* 큰 수가 앞이면 교환 */
+        int tmp = a;
+        a = b;
+        b = tmp;
+    }
+    for (i = a; i &lt;= b; i++) {
+        sum += i;
+    }
+    printf("%d부터 %d까지의 합은 %d입니다.\n", a, b, sum);
+    return 0;
+}</code></pre>
+    </div>
+  </article>
+
+  <article class="chapter" id="n2">
+    <header class="c2"><span class="no">CHAPTER 02</span><h3>C 프로그래밍 시작</h3></header>
+    <div class="body">
+      <h4>프로그램 구현 과정</h4>
+      <ol>
+        <li><b>소스 편집</b> — C 소스 파일 작성. 하나의 C 프로그램에는 실행 시작점인 <code>main()</code> 함수가 <b>단 한 개</b>만 있어야 한다.</li>
+        <li><b>컴파일</b> — 소스 코드를 목적 코드로 번역하고 문법 오류 검사</li>
+        <li><b>목적 파일 생성</b> — 일반적으로 <code>.obj</code> 확장자</li>
+        <li><b>링크</b> — 링크 에디터가 여러 목적 파일과 라이브러리를 결합</li>
+        <li><b>실행 파일 생성</b> — 운영체제가 실행할 수 있는 파일 생성</li>
+        <li><b>로드</b> — 로더 모듈이 실행 파일을 메모리에 적재</li>
+        <li><b>실행</b> — CPU가 메모리에 적재된 프로그램을 실행</li>
+      </ol>
+      <h4>오류(Error) — 프로그램 개발 과정에서 나타나는 모든 문제</h4>
+      <div class="tbl"><table>
+        <tr><th>시점</th><th>대표 원인</th><th>확인 주체</th></tr>
+        <tr><td>컴파일 (시간) 오류</td><td>구문(syntax)/문법 오류</td><td>컴파일러</td></tr>
+        <tr><td>링크 (시간) 오류</td><td>링커 오류</td><td>링크 에디터</td></tr>
+        <tr><td>실행 (시간) 오류</td><td>논리 오류, 설계 오류</td><td>실행 환경과 개발자</td></tr>
+      </table></div>
+      <h4>IDE (Integrated Development Environment, 통합 개발 환경)</h4>
+      <ul><li>편집기, 컴파일러, 디버거 등의 도구를 한 환경에서 사용할 수 있게 제공</li><li>예: Visual Studio</li></ul>
+    </div>
+  </article>
+
+  <article class="chapter" id="n3">
+    <header class="c3"><span class="no">CHAPTER 03</span><h3>자료형과 변수</h3></header>
+    <div class="body">
+      <h4>자료형과 서식 지정자</h4>
+      <div class="tbl"><table>
+        <tr><th>분류</th><th>자료형</th><th>서식 지정자</th></tr>
+        <tr><td rowspan="5">정수형</td><td>short</td><td class="mono">%d 또는 %hd</td></tr>
+        <tr><td>int</td><td class="mono">%d</td></tr>
+        <tr><td>long int</td><td class="mono">%ld</td></tr>
+        <tr><td>long long int</td><td class="mono">%lld</td></tr>
+        <tr><td>unsigned</td><td class="mono">%u, %lu, %llu</td></tr>
+        <tr><td rowspan="3">실수형(부동소수형)</td><td>float</td><td class="mono">%f</td></tr>
+        <tr><td>double</td><td class="mono">출력 %f 또는 %lf / 입력 %lf</td></tr>
+        <tr><td>long double</td><td class="mono">%lf</td></tr>
+        <tr><td>문자</td><td>char</td><td class="mono">%c</td></tr>
+        <tr><td>문자열</td><td>char 배열</td><td class="mono">%s</td></tr>
+        <tr><td rowspan="3">기타</td><td>8진수</td><td class="mono">%o</td></tr>
+        <tr><td>16진수</td><td class="mono">%x, %X</td></tr>
+        <tr><td>지수형식</td><td class="mono">%e, %E</td></tr>
+      </table></div>
+      <ul>
+        <li><b>unsigned</b> — 맨 처음 비트에 부호를 저장하지 않도록 지정 → 음수 사용 불가</li>
+        <li>문자열 변수 선언: <code>char 변수명[문자열크기] = {' '};</code></li>
+        <li>상수 표기: 8진수는 앞에 <code>0</code> (예 <code>021</code>), 16진수는 <code>0x</code> (예 <code>0x1b</code>)</li>
+        <li><code>const</code> 상수 — 값을 바꿀 수 없는 변수. 예: <code>const double mileConversion = 0.6213721;</code></li>
+      </ul>
+      <h4>컴퓨터에서 숫자 표기법</h4>
+      <ul>
+        <li><b>부호와 절대치</b> — 맨 앞 비트 0이면 양수, 1이면 음수. 나머지 비트로 절댓값 표현</li>
+        <li><b>1의 보수</b> — 양수의 비트를 반전하여 음수 표현</li>
+        <li><b>2의 보수</b> — 1의 보수에 1을 더해 음수 표현. 현대 컴퓨터의 부호 있는 정수 표현에 주로 사용</li>
+      </ul>
+      <h4>k bit 기준 표현 범위</h4>
+      <div class="tbl"><table>
+        <tr><th>방식</th><th>범위</th><th>8bit 예</th></tr>
+        <tr><td>부호와 절대치, 1의 보수</td><td class="mono">−(2<sup>k−1</sup>−1) ~ 2<sup>k−1</sup>−1</td><td class="mono">−127 ~ 127</td></tr>
+        <tr><td>2의 보수</td><td class="mono">−2<sup>k−1</sup> ~ 2<sup>k−1</sup>−1</td><td class="mono">−128 ~ 127</td></tr>
+        <tr><td>unsigned</td><td class="mono">0 ~ 2<sup>k</sup>−1</td><td class="mono">0 ~ 255</td></tr>
+      </table></div>
+      <h4>6비트 표현 예시</h4>
+      <div class="tbl"><table>
+        <tr><th>숫자</th><th>부호와 절대치</th><th>1의 보수</th><th>2의 보수</th></tr>
+        <tr><td>+9</td><td class="mono">001001</td><td class="mono">001001</td><td class="mono">001001</td></tr>
+        <tr><td>−9</td><td class="mono">101001</td><td class="mono">110110</td><td class="mono">110111</td></tr>
+        <tr><td>+0</td><td class="mono">000000</td><td class="mono">000000</td><td class="mono">000000</td></tr>
+        <tr><td>−0</td><td class="mono">100000</td><td class="mono">111111</td><td>없음 (0이 하나뿐)</td></tr>
+        <tr><td>+12</td><td class="mono">001100</td><td class="mono">001100</td><td class="mono">001100</td></tr>
+        <tr><td>−12</td><td class="mono">101100</td><td class="mono">110011</td><td class="mono">110100</td></tr>
+      </table></div>
+      <div class="note"><b>포인트</b> — 양수는 세 방식 모두 같다. −0이 존재하는 건 부호와 절대치·1의 보수뿐이라서 2의 보수는 음수 쪽이 하나 더 넓다(−128까지).</div>
+    </div>
+  </article>
+
+  <article class="chapter" id="n4">
+    <header class="c4"><span class="no">CHAPTER 04</span><h3>전처리와 입출력</h3></header>
+    <div class="body">
+      <h4>전처리</h4>
+      <ul>
+        <li>컴파일 전, <b>전처리기</b>의 전처리 과정이 필요</li>
+        <li>헤더파일을 불러오는 지시자: <code>#include &lt;헤더파일&gt;</code></li>
+        <li>매크로 상수를 정의하는 지시자: <code>#define 이름 값</code> (예 <code>#define EXCHANGE_RATE 1120.0</code>)</li>
+      </ul>
+      <h4>출력 함수 printf()</h4>
+      <ul>
+        <li>형태: <code>printf(형식문자열, 출력목록);</code></li>
+        <li>형식 지정자: <code>%[flag][width].[precision][type]</code></li>
+      </ul>
+      <div class="tbl"><table>
+        <tr><th>요소</th><th>의미</th><th>예시 → 결과</th></tr>
+        <tr><td>flag <code>-</code></td><td>좌측 정렬</td><td class="mono">"[%-5d]", 42 → [42&nbsp;&nbsp;&nbsp;]</td></tr>
+        <tr><td>flag <code>+</code></td><td>부호 표시</td><td class="mono">"%+d", 42 → +42</td></tr>
+        <tr><td>flag <code>0</code></td><td>폭이 남으면 0으로 채움</td><td class="mono">"%05d", 42 → 00042</td></tr>
+        <tr><td>flag <code>#</code></td><td>리딩 문자 0, 0x, 0X 포함</td><td class="mono">"%#o %#x", 36, 36 → 044 0x24</td></tr>
+        <tr><td>width</td><td>전체 출력 폭</td><td class="mono">"[%5d]", 42 → [&nbsp;&nbsp;&nbsp;42]</td></tr>
+        <tr><td>.precision</td><td>소수점 이하 자릿수</td><td class="mono">"%.3lf", 37.2823 → 37.282</td></tr>
+        <tr><td>type</td><td>자료형에 맞는 서식 지정자</td><td class="mono">%d %lf %c %s ...</td></tr>
+      </table></div>
+      <ul>
+        <li><code>%%</code> — % 문자 자체를 출력 (예: <code>"4.5%%"</code> → 4.5%)</li>
+        <li><code>%12.3lf</code> — 폭 12, 소수 셋째 자리, 우측 정렬 / <code>%-12.3lf</code> — 좌측 정렬</li>
+      </ul>
+      <h4>입력 함수 scanf()</h4>
+      <ul>
+        <li>형태: <code>scanf(형식문자열, 입력변수목록);</code></li>
+        <li>입력 변수 앞에 <b><code>&amp;</code>(앰퍼샌드)</b>를 꼭 붙여야 한다 — <code>scanf("%d", &amp;year);</code></li>
+        <li><code>" %c"</code>처럼 % 앞에 공백을 두면 앞에 남은 공백·개행을 건너뜀</li>
+      </ul>
+      <h4>문자 입출력</h4>
+      <ul><li><code>getchar()</code> — 문자 하나 입력 / <code>putchar(c)</code> — 문자 하나 출력</li></ul>
+    </div>
+  </article>
+
+  <article class="chapter" id="n5">
+    <header class="c5"><span class="no">CHAPTER 05</span><h3>연산자와 연산식</h3></header>
+    <div class="body">
+      <h4>산술연산자 + − * / %</h4>
+      <ul>
+        <li>C언어에는 <code>//</code> 연산자가 <b>없다</b> (정수끼리 <code>/</code>하면 몫만 남음: <code>7 / 2 == 3</code>)</li>
+        <li><code>* / %</code>는 <code>+ −</code>보다 우선순위가 높다</li>
+        <li><code>%</code>는 나머지 (<code>7 % 3 == 1</code>)</li>
+      </ul>
+      <h4>대입연산자</h4>
+      <ul><li><code>=</code> 오른쪽 결과값을 왼쪽 변수에 저장</li><li>축약 대입: <code>+= -= *= /= %=</code></li></ul>
+      <h4>증감연산자</h4>
+      <div class="tbl"><table>
+        <tr><th>종류</th><th>동작</th><th>예 (x = 5)</th></tr>
+        <tr><td>전위 <code>++x</code>, <code>--x</code></td><td>값을 증감한 <b>이후</b> 연산</td><td class="mono">y = ++x; → x=6, y=6</td></tr>
+        <tr><td>후위 <code>x++</code>, <code>x--</code></td><td>연산한 <b>이후</b> 값을 증감</td><td class="mono">y = x++; → x=6, y=5</td></tr>
+      </table></div>
+      <div class="note warn"><b>주의</b> — 상수에는 사용 불가 (<code>++300</code>), 일반 수식에는 사용 불가 (<code>(a+1)--</code>)</div>
+      <h4>관계·논리 연산자</h4>
+      <ul>
+        <li>대소비교 <code>&lt; &gt; &lt;= &gt;=</code> / 동등비교 <code>== !=</code></li>
+        <li>논리 <code>&amp;&amp;</code>(AND), <code>||</code>(OR), <code>!</code>(NOT)</li>
+      </ul>
+      <h4>형변환</h4>
+      <ul>
+        <li><b>올림변환</b> — 작은 범주 → 큰 범주 자료형</li>
+        <li><b>내림변환</b> — 큰 범주 → 작은 범주. 범위 밖 데이터는 버려짐 (float 3.14 → int 3)</li>
+        <li><b>명시적 형변환</b> — <code>(int)a</code> 처럼 자료형을 직접 명시</li>
+        <li><b>묵시적 형변환</b> — 컴파일러가 자동 수행</li>
+      </ul>
+      <div class="note"><b>실수 연산 팁</b> — <code>4/3</code>은 정수 나눗셈이라 1이 된다. 실수 결과가 필요하면 <code>4.0/3.0</code>처럼 쓴다 (연습문제 5.4, 6.10).</div>
+      <h4>연산 순서</h4>
+      <p class="point"><b>증감(전위), 형변환</b> → <b>산술</b> → <b>관계</b> → <b>논리</b> → <b>삼항</b> → <b>대입</b> → <b>증감(후위)</b></p>
+      <h4>수학 함수 (<code>#include &lt;math.h&gt;</code>)</h4>
+      <ul><li><code>pow(a, b)</code> = a<sup>b</sup>, <code>sqrt(x)</code> = √x</li><li>복리: 원금 × (1 + 이율)<sup>년</sup> → <code>principal * pow(1 + rate, years)</code></li></ul>
+    </div>
+  </article>
+
+  <article class="chapter" id="n6">
+    <header class="c6"><span class="no">CHAPTER 06</span><h3>조건</h3></header>
+    <div class="body">
+      <p>조건문: 두 개 또는 여러 개 중 하나를 선택하는 구조.</p>
+      <h4>if 문</h4>
+      <ul>
+        <li>조건이 참이면 if의 코드를 실행</li>
+        <li>if–else if–else 묶음은 위에서부터 검사하여 <b>처음 참이 된 조건의 블록만</b> 실행. 모두 거짓이면 else 실행</li>
+        <li>else는 <b>필수가 아니다</b></li>
+      </ul>
+<pre><code>if (조건1) {
+    실행할 코드1
+} else if (조건2) {
+    실행할 코드2
+} else {
+    실행할 코드3
+}</code></pre>
+      <h4>switch 문</h4>
+      <ul>
+        <li>식의 결과에 따라 코드를 실행</li>
+        <li>식의 결과와 case 값은 <b>정수 또는 문자형 상수</b>여야 한다</li>
+        <li><b>break가 없으면</b> 해당 case 이후의 모든 코드가 실행된다 (fall-through)</li>
+        <li>default는 해당 case가 없을 때 실행. <b>생략 가능</b>하며 <b>위치 제한 없음</b></li>
+      </ul>
+<pre><code>switch (식) {
+    case 값1:
+        실행할 코드1
+        break;
+    case 값2:
+        실행할 코드2
+        break;
+    default:
+        실행할 코드3
+}</code></pre>
+      <h4>조건연산자 (삼항연산자)</h4>
+      <p><code>조건 ? 참일 때 값 : 거짓일 때 값</code> — 예: <code>max = (a &gt; b) ? a : b;</code></p>
+      <h4>자주 나오는 조건식</h4>
+      <ul>
+        <li>윤년: <code>(year % 4 == 0 &amp;&amp; year % 100 != 0) || year % 400 == 0</code></li>
+        <li>짝수: <code>n % 2 == 0</code> / 배수: <code>n % k == 0</code></li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="chapter" id="n7">
+    <header class="c7"><span class="no">CHAPTER 07</span><h3>반복</h3></header>
+    <div class="body">
+      <p>반복문: 반복 몸체인 여러 문장을 여러 번 반복하는 구조.</p>
+      <div class="tbl"><table>
+        <tr><th>반복문</th><th>특징</th><th>형태</th></tr>
+        <tr><td>for</td><td>제어변수의 초기화와 증감을 이용. 초기값·조건·증감은 <b>생략도, 2개 이상도</b> 가능. 조건을 콤마로 연결하면 <b>가장 오른쪽 식</b>이 참일 때 반복</td><td class="mono">for (초기값; 조건; 증감) { ... }</td></tr>
+        <tr><td>while</td><td>실행 <b>전에</b> 조건 검사 → 0번 실행될 수도 있음</td><td class="mono">while (조건) { ... }</td></tr>
+        <tr><td>do while</td><td>한 번 실행 <b>후</b> 조건 검사 → <b>최소 1번</b> 실행</td><td class="mono">do { ... } while (조건);</td></tr>
+      </table></div>
+      <h4>분기문 — 정해진 장소로 이동하는 구조</h4>
+      <ul>
+        <li><b>break</b> — 반복 중단. 중첩 반복문에서는 <b>가장 가까운</b> 반복만 중단</li>
+        <li><b>continue</b> — 이후 반복 몸체의 나머지를 건너뛰고 다음 반복 계속</li>
+        <li><b>return</b> — 함수 실행을 즉시 종료하고 호출한 곳으로 값을 돌려줌</li>
+      </ul>
+      <h4>중첩 반복 패턴 — 소수 판별</h4>
+<pre><code>for (int i = 2; i &lt;= 100; i++) {
+    int is_prime = 1;
+    for (int j = 2; j &lt; i; j++) {
+        if (i % j == 0) { is_prime = 0; break; }   /* 나누어 떨어지면 소수 아님 */
+    }
+    if (is_prime) printf("%d ", i);
+}</code></pre>
+    </div>
+  </article>
+</section>
+
+<!-- ================= 요약 노트 ================= -->
+<section class="page" id="summary">
+  <div class="page-head"><h2>요약 노트</h2><p>시험 직전 5분 훑어보기용. 챕터당 핵심만.</p></div>
+  <div class="sum-grid">
+    <div class="sum c1"><h3>01 언어 개요</h3><ul>
+      <li>저급(기계어·어셈블리) / <span class="kw">중급 = C</span> / 고급(Java·C++·Python)</li>
+      <li><span class="kw">컴파일러</span> 전체 한 번에 번역·빠름(C) ↔ <span class="kw">인터프리터</span> 한 줄씩·느림(Python)</li>
+      <li>ASCII 7bit 데이터, 'A'=65, 'a'=97</li>
+      <li>알고리즘 원리: 문제분해·순차·조건·반복</li>
+      <li>표현: 자연어·의사코드·순서도</li>
+      <li>개발: 요구분석→설계→구현→검증→유지보수</li>
+      <li>마름모=판단, 평행사변형=입출력, 육각형=준비</li>
+    </ul></div>
+    <div class="sum c2"><h3>02 C 시작</h3><ul>
+      <li>편집→컴파일→<span class="kw">.obj</span>→링크→실행파일→로드→실행</li>
+      <li><span class="kw">main()은 단 한 개</span></li>
+      <li>문법 오류=컴파일러 / 링커 오류=링크 에디터 / 논리 오류=실행 시</li>
+      <li>IDE = 편집기+컴파일러+디버거 (Visual Studio)</li>
+    </ul></div>
+    <div class="sum c3"><h3>03 자료형·변수</h3><ul>
+      <li>%d int · %ld long · %lld long long · %u unsigned</li>
+      <li>%f float · double은 <span class="kw">입력 %lf</span></li>
+      <li>%c 문자 · %s 문자열 · %o 8진 · %x 16진 · %e 지수</li>
+      <li>021(8진)=17, 0x1b(16진)=27</li>
+      <li>2의 보수 = 1의 보수 + 1</li>
+      <li>k bit: 2의 보수 <span class="kw">−2<sup>k−1</sup>~2<sup>k−1</sup>−1</span>, unsigned 0~2<sup>k</sup>−1</li>
+    </ul></div>
+    <div class="sum c4"><h3>04 전처리·입출력</h3><ul>
+      <li>#include 헤더 / #define 매크로 상수</li>
+      <li><span class="kw">%[flag][width].[precision][type]</span></li>
+      <li>flag: − 좌측, + 부호, 0 0채움, # 0/0x 붙임</li>
+      <li>%% → % 출력</li>
+      <li>scanf는 변수 앞에 <span class="kw">&amp;</span></li>
+      <li>getchar / putchar 문자 1개 입출력</li>
+    </ul></div>
+    <div class="sum c5"><h3>05 연산자</h3><ul>
+      <li>C에 // 없음, 정수/정수 = 몫</li>
+      <li>++x 먼저 증가, x++ 나중 증가</li>
+      <li>상수·수식엔 ++/−− 불가</li>
+      <li>내림변환 시 데이터 손실 (3.14→3)</li>
+      <li>순서: <span class="kw">전위·형변환→산술→관계→논리→삼항→대입→후위</span></li>
+      <li>pow, sqrt → math.h</li>
+    </ul></div>
+    <div class="sum c6"><h3>06 조건</h3><ul>
+      <li>if–else if–else: 처음 참인 블록 하나만</li>
+      <li>else, default는 생략 가능</li>
+      <li>switch case는 <span class="kw">정수·문자 상수</span>만</li>
+      <li><span class="kw">break 없으면 아래 case 계속 실행</span></li>
+      <li>삼항: 조건 ? 참 : 거짓</li>
+      <li>윤년: 4의 배수 &amp;&amp; 100의 배수 X, 또는 400의 배수</li>
+    </ul></div>
+    <div class="sum c7"><h3>07 반복</h3><ul>
+      <li>for: 초기·조건·증감 생략/여러 개 가능</li>
+      <li>while: 먼저 검사 (0회 가능)</li>
+      <li><span class="kw">do while: 최소 1회</span>, 끝에 세미콜론</li>
+      <li>break: 가장 가까운 반복 탈출</li>
+      <li>continue: 나머지 건너뛰고 다음 반복</li>
+      <li>return: 함수 종료 + 값 반환</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ================= 암기 노트 ================= -->
+<section class="page" id="memo">
+  <div class="page-head"><h2>암기 노트</h2><p>카드를 눌러 답을 확인하세요. 외울 때까지 섞어서 반복!</p></div>
+  <div class="fc-bar">
+    <button class="btn pri" id="fc-shuffle">섞기</button>
+    <button class="btn" id="fc-open">모두 펼치기</button>
+    <button class="btn" id="fc-close">모두 접기</button>
+  </div>
+  <div class="toc" id="fc-filter"></div>
+  <div class="fc-grid" id="fc-grid"></div>
+</section>
+
+<!-- ================= 연습문제 ================= -->
+<section class="page" id="practice">
+  <div class="page-head"><h2>연습문제</h2><p>수업 연습문제 15개. 먼저 직접 짜 보고 → 힌트 → 풀이 순서로 확인하세요.</p></div>
+  <div id="ex-list"></div>
+</section>
+
+<!-- ================= 문제은행 ================= -->
+<section class="page" id="bank">
+  <div class="page-head"><h2>문제은행</h2><p>객관식 · OX · 단답형. 답을 고르면 바로 채점되고 해설이 나옵니다.</p></div>
+  <div class="qz-top">
+    <div class="toc" id="qz-filter" style="margin:0"></div>
+    <div class="score">
+      <span>정답 <b id="s-ok">0</b> / 푼 문제 <b id="s-done">0</b> / 전체 <b id="s-all">0</b></span>
+      <span class="meter"><i id="s-bar"></i></span>
+    </div>
+    <div class="fc-bar" style="margin:10px 0 0">
+      <button class="btn" id="qz-shuffle">섞기</button>
+      <button class="btn" id="qz-wrong">오답만</button>
+      <button class="btn" id="qz-reset">초기화</button>
+    </div>
+  </div>
+  <div id="qz-list"></div>
+</section>
+
+</main>
+<footer>창의공학설계(Adventure Design) 수업 자료 기반 · 디자인 토큰: Notion (awesome-design-md)</footer>
+
+<script>
+const CH = {1:'01 언어 개요',2:'02 C 시작',3:'03 자료형',4:'04 입출력',5:'05 연산자',6:'06 조건',7:'07 반복'};
+const $ = s => document.querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+/* ---------- tabs (hash routing) ---------- */
+const PAGES = ['notes','summary','memo','practice','bank'];
+function route() {
+  const h = location.hash.slice(1);
+  const page = PAGES.includes(h) ? h : (document.getElementById(h)?.closest('.page')?.id || 'notes');
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('on', p.id === page));
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.p === page));
+  const cur = document.querySelector('.tab[data-p="' + page + '"]'); const bar = cur.parentNode; bar.scrollLeft += cur.getBoundingClientRect().left - bar.getBoundingClientRect().left - (bar.clientWidth - cur.offsetWidth) / 2;
+}
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => { location.hash = t.dataset.p; });
+addEventListener('hashchange', route);
+
+/* ---------- chapter filter chips ---------- */
+function chips(box, current, onPick) {
+  box.innerHTML = '';
+  [['all','전체'], ...Object.entries(CH)].forEach(([k, v]) => {
+    const b = el('button', 'chip' + (String(current) === k ? ' on' : ''), v);
+    b.onclick = () => onPick(k);
+    box.append(b);
+  });
+}
+
+/* ---------- 암기 노트: flashcards ---------- */
+const CARDS = [
+  [1,'C언어의 언어 수준은?','중급 언어 — 하드웨어 제어 + 고급 언어의 편의성'],
+  [1,'컴파일러 vs 인터프리터','컴파일러: 전체를 한 번에 번역, 빠름 (C)\n인터프리터: 한 줄씩 번역·실행, 느림, 컴파일 단계 없음 (Python)'],
+  [1,'ASCII 코드값 \'A\' / \'a\'','\'A\' = 65, \'a\' = 97 (차이 32)'],
+  [1,'ASCII는 8bit 중 몇 bit를 데이터로?','7bit'],
+  [1,'알고리즘을 만드는 4원리','문제분해, 순차, 조건, 반복'],
+  [1,'알고리즘 표현 방법 3가지','자연어, 의사코드, 순서도'],
+  [1,'소프트웨어 개발 과정 5단계','요구사항 분석 → 설계 → 구현 → 검증 → 유지보수'],
+  [1,'순서도: 마름모 ◇','조건·의사 결정 (Decision)'],
+  [1,'순서도: 평행사변형 ▱','입출력 (Input/Output)'],
+  [1,'순서도: 육각형 ⬡','준비 (Preparation) — 변수 할당, 초기값 설정'],
+  [1,'순서도: 둥근 사각형 ⬭','단자 (Terminator) — 시작과 끝'],
+  [1,'연결자 ○ vs 페이지 연결자 ⬠','연결자: 같은 페이지 안 연결\n페이지 연결자: 다른 페이지로 이어짐'],
+  [1,'양옆에 세로줄이 있는 사각형','정의된 처리 (Predefined process) — 함수·서브프로그램 호출'],
+  [2,'프로그램 구현 7단계','소스 편집 → 컴파일 → 목적 파일(.obj) → 링크 → 실행 파일 → 로드 → 실행'],
+  [2,'C 프로그램의 main() 개수','단 한 개'],
+  [2,'오류 3종과 확인 주체','컴파일 오류(문법) — 컴파일러\n링크 오류 — 링크 에디터\n실행 오류(논리·설계) — 실행 환경과 개발자'],
+  [2,'IDE','통합 개발 환경 — 편집기·컴파일러·디버거를 한 환경에 (예: Visual Studio)'],
+  [3,'정수형 서식 지정자','short %hd · int %d · long %ld · long long %lld · unsigned %u'],
+  [3,'double의 입력/출력 서식','입력은 반드시 %lf, 출력은 %f 또는 %lf'],
+  [3,'%o / %x / %e','8진수 / 16진수 / 지수형식'],
+  [3,'021 과 0x1b 의 10진값','021 = 17, 0x1b = 27'],
+  [3,'2의 보수 만드는 법','비트 반전(1의 보수) 후 +1'],
+  [3,'k bit 2의 보수 범위','−2^(k−1) ~ 2^(k−1)−1  (8bit: −128 ~ 127)'],
+  [3,'k bit 부호와 절대치 / 1의 보수 범위','−(2^(k−1)−1) ~ 2^(k−1)−1  (8bit: −127 ~ 127)'],
+  [3,'k bit unsigned 범위','0 ~ 2^k − 1  (8bit: 0 ~ 255)'],
+  [3,'6bit −9 (부호절대치/1의보수/2의보수)','101001 / 110110 / 110111'],
+  [4,'전처리 지시자 2가지','#include <헤더파일>, #define 이름 값'],
+  [4,'printf 형식 지정자 구조','%[flag][width].[precision][type]'],
+  [4,'flag  −  +  0  #','− 좌측정렬 / + 부호표시 / 0 빈 폭 0으로 / # 리딩문자 0, 0x 붙임'],
+  [4,'% 문자 자체 출력','%%'],
+  [4,'scanf 필수 사항','입력 변수 앞에 & (주소 연산자)'],
+  [5,'++x 와 x++ 차이','++x: 먼저 증가 후 사용\nx++: 사용 후 증가'],
+  [5,'증감연산자를 못 쓰는 곳','상수 (++300), 일반 수식 ((a+1)--)'],
+  [5,'올림변환 / 내림변환','올림: 작은→큰 자료형\n내림: 큰→작은 자료형 (데이터 손실, 3.14→3)'],
+  [5,'연산 우선 순서','전위증감·형변환 → 산술 → 관계 → 논리 → 삼항 → 대입 → 후위증감'],
+  [5,'5/9 의 값 (int)','0 — 정수 나눗셈. 실수가 필요하면 5.0/9.0'],
+  [6,'switch case에 쓸 수 있는 값','정수 또는 문자형 상수 (실수·변수 불가)'],
+  [6,'switch에서 break를 빼면?','해당 case 이후 모든 코드가 실행됨 (fall-through)'],
+  [6,'default 규칙','case에 해당 없을 때 실행, 생략 가능, 위치 제한 없음'],
+  [6,'윤년 조건식','(y%4==0 && y%100!=0) || y%400==0'],
+  [6,'삼항연산자 형태','조건 ? 참일 때 : 거짓일 때'],
+  [7,'while vs do while','while: 먼저 검사 (0회 가능)\ndo while: 실행 후 검사 (최소 1회)'],
+  [7,'break / continue / return','break: 가장 가까운 반복 탈출\ncontinue: 나머지 건너뛰고 다음 반복\nreturn: 함수 종료 + 값 반환'],
+  [7,'for 조건에 콤마(,)로 여러 식을 쓰면?','가장 오른쪽 식의 값이 참이면 반복'],
+];
+let fcCh = 'all', fcOrder = CARDS.map((_, i) => i);
+function renderCards() {
+  chips($('#fc-filter'), fcCh, k => { fcCh = k; renderCards(); });
+  const g = $('#fc-grid'); g.innerHTML = '';
+  fcOrder.filter(i => fcCh === 'all' || String(CARDS[i][0]) === fcCh).forEach(i => {
+    const [ch, f, b] = CARDS[i];
+    const c = el('button', 'fc');
+    c.append(el('span', 'tag', 'CH ' + CH[ch]), el('span', 'front', f));
+    const back = el('span', 'back'); back.style.whiteSpace = 'pre-line'; back.textContent = b;
+    c.append(back, el('span', 'hint', '탭해서 정답 보기'));
+    c.onclick = () => c.classList.toggle('open');
+    g.append(c);
+  });
+}
+$('#fc-shuffle').onclick = () => { shuffle(fcOrder); renderCards(); };
+$('#fc-open').onclick = () => document.querySelectorAll('.fc').forEach(c => c.classList.add('open'));
+$('#fc-close').onclick = () => document.querySelectorAll('.fc').forEach(c => c.classList.remove('open'));
+
+/* ---------- 연습문제 ---------- */
+const EX = [
+  {ch:3,no:'3.1',t:'8진수·16진수 상수를 10진수로 출력',q:'함수 printf()를 사용해 8진수 021과 16진수 0x1b 상수를 10진수로 출력하는 프로그램을 작성하시오.',
+   hint:'8진수 상수는 앞에 0, 16진수는 0x. %d로 출력하면 10진수가 된다.',
+   code:`#include <stdio.h>
+
+int main() {
+    const int octal = 021;
+    const int hex = 0x1b;
+
+    printf("%d %d", octal, hex);
+    return 0;
+}`,out:'17 27',exp:'021 = 2×8 + 1 = 17, 0x1b = 1×16 + 11 = 27. const 상수로 저장 후 %d로 10진수 출력.'},
+  {ch:3,no:'3.9',t:'km → mile 변환',q:'길이 60km, 80km, 100km, 120km를 마일(mile) 단위로 출력하시오. (단, 1km는 0.6213721마일이라는 것을 const 상수로 정의할 것)',
+   hint:'const double 로 변환 계수를 정의. km는 %3d(3자리), mile은 %.3lf(소수 셋째 자리).',
+   code:`#include <stdio.h>
+
+void unitConvert(int km, double mileConversion);
+
+int main() {
+    const double mileConversion = 0.6213721;
+
+    unitConvert(60, mileConversion);
+    unitConvert(80, mileConversion);
+    unitConvert(100, mileConversion);
+    unitConvert(120, mileConversion);
+    return 0;
+}
+
+void unitConvert(int km, double mileConversion) {
+    double mile = km * mileConversion;
+    printf("%3d(km): %.3lf(mile)\\n", km, mile);
+}`,out:` 60(km): 37.282(mile)
+ 80(km): 49.710(mile)
+100(km): 62.137(mile)
+120(km): 74.565(mile)`,exp:'변환 계수를 const로 정의하고 함수 unitConvert()로 반복 출력. %3d는 폭 3의 우측 정렬이라 60, 80 앞에 공백이 생긴다. (수업 코드의 mile 매개변수는 함수 안에서 계산하므로 지역변수로 정리함)'},
+  {ch:3,no:'3.12',t:'#define 매크로로 환율 계산',q:'US $1 = 1120원을 #define EXCHANGE_RATE 1120.0 매크로로 정의하고, 변수 won에 저장된 100만원을 won / EXCHANGE_RATE로 연산해 달러를 출력하시오.',
+   hint:'1120.0 이 실수이므로 int / double → double 결과. %lf로 출력.',
+   code:`#include <stdio.h>
+#define EXCHANGE_RATE 1120.0
+
+int main() {
+    int won = 1000000;
+
+    printf("%d 원 => %lf 달러", won, won / EXCHANGE_RATE);
+    return 0;
+}`,out:'1000000 원 => 892.857143 달러',exp:'매크로 상수는 전처리 단계에서 값으로 치환된다. int ÷ double 은 묵시적 형변환으로 double 연산. %lf 기본 소수 6자리.'},
+  {ch:4,no:'4.4',t:'문자의 8·10·16진수 코드값',q:'표준입력으로 문자를 하나 입력 받아 입력된 문자, 8진수 코드 값, 10진수 코드 값, 16진수 코드 값을 출력하시오.',
+   hint:'char도 정수다. %c, %#o, %d, %#x 로 같은 변수를 네 번 출력.',
+   code:`#include <stdio.h>
+
+int main() {
+    char text = ' ';
+
+    printf("문자입력: ");
+    scanf(" %c", &text);
+
+    printf("%c %#o %d %#x", text, text, text, text);
+    return 0;
+}`,out:`문자입력: $
+$ 044 36 0x24`,exp:"'$'의 ASCII 코드는 36 = 8진수 44 = 16진수 24. # flag로 리딩 문자 0, 0x를 붙였다."},
+  {ch:4,no:'4.5',t:'사각형·삼각형 면적 정렬 출력',q:'두 실수를 입력 받아 [조건1] 사각형 면적을 전체 폭 12, 소수 이하 3자리, 우측정렬로, [조건2] 삼각형 면적을 전체 폭 12, 소수 이하 3자리, 좌측정렬로 출력하시오.',
+   hint:'우측정렬 %12.3lf, 좌측정렬 %-12.3lf. double 입력은 %lf.',
+   code:`#include <stdio.h>
+
+int main() {
+    double num1 = 0, num2 = 0;
+
+    printf("두 실수 입력: ");
+    scanf(" %lf %lf", &num1, &num2);
+
+    printf("가로: %lf 세로: %lf\\n", num1, num2);
+    printf("사각형 면적: %12.3lf\\n", (num1 * num2));
+    printf("삼각형 면적: %-12.3lf", (num1 * num2 * 0.5));
+    return 0;
+}`,out:`두 실수 입력: 3.78 9.45
+가로: 3.780000 세로: 9.450000
+사각형 면적:       35.721
+삼각형 면적: 17.860      `,exp:'width 12 안에서 기본은 우측 정렬, - flag는 좌측 정렬. .3은 소수 셋째 자리까지(반올림).'},
+  {ch:4,no:'4.8',t:'getchar / putchar',q:'getchar()로 문자 하나를 입력 받아 [조건1] putchar()로 그대로 출력, [조건2] printf()로 문자의 코드 값을 10진수, 8진수, 16진수로 출력하시오.',
+   hint:'text = getchar(); putchar(text);',
+   code:`#include <stdio.h>
+
+int main() {
+    char text = ' ';
+
+    printf("문자 입력: ");
+    text = getchar();
+
+    putchar(text);
+    printf("\\n%d %#o %#x", text, text, text);
+    return 0;
+}`,out:`문자 입력: *
+*
+42 052 0x2a`,exp:"'*'의 ASCII 코드는 42 = 8진수 52 = 16진수 2a."},
+  {ch:5,no:'5.4',t:'구의 체적과 표면적',q:'반지름이 8.32인 구의 체적과 표면적을 구하시오. (V = 4/3·πr³, S = 4πr²)',
+   hint:'4/3 은 정수 나눗셈으로 1이 된다! 4.0 / 3.0 으로 써야 한다.',
+   code:`#include <stdio.h>
+
+int main() {
+    const double pi = 3.14;
+    double radius = 8.32;
+    double v = 0, s = 0;
+
+    v = (4.0 / 3.0) * pi * radius * radius * radius;
+    s = 4 * pi * radius * radius;
+
+    printf("구의 체적은 %.3lf 입니다\\n", v);
+    printf("구의 표면적은 %.3lf 입니다\\n", s);
+    return 0;
+}`,out:`구의 체적은 2411.228 입니다
+구의 표면적은 869.433 입니다`,exp:'핵심은 4.0 / 3.0 — 실수형으로 연산되게 해야 결과가 맞다.'},
+  {ch:5,no:'5.8',t:'복리 만기 금액',q:'원금 1,000,000, 이율 4.5%일 때 예치 기간(년)을 입력 받아 복리 만기 총 금액을 출력하시오. (원금 × (1+이율)^년, pow() 사용)',
+   hint:'#include <math.h>, pow(1 + rate, years). %를 출력하려면 %%.',
+   code:`#include <math.h>
+#include <stdio.h>
+
+int main() {
+    int principal = 1000000, years = 0;
+    const double interest_rate = 0.045;
+    double total_amount = 0;
+
+    printf("예치 기간 입력(년) >> ");
+    scanf("%d", &years);
+
+    total_amount = principal * pow(1 + interest_rate, years);
+    printf("이율 : 4.5%% 총금액: %.2lf\\n", total_amount);
+    return 0;
+}`,out:`예치 기간 입력(년) >> 5
+이율 : 4.5% 총금액: 1246181.94`,exp:'pow(a, b) = a^b. 형식 문자열 안에서 % 를 찍으려면 %% 로 써야 한다.'},
+  {ch:5,no:'5.10',t:'이차방정식 해와 검증',q:'이차방정식 2x² + 3x − 4 = 0 의 해를 근의 공식으로 구한 후, 다시 대입해 검증하여 출력하시오. (sqrt() 사용)',
+   hint:'판별식 D = b² − 4ac < 0 이면 실근 없음. x = (−b ± √D) / 2a',
+   code:`#include <math.h>
+#include <stdio.h>
+
+int main() {
+    int a = 2, b = 3, c = -4;
+    double discriminant = 0;
+    double solution1 = 0, solution2 = 0;
+    double check1 = 0, check2 = 0;
+
+    discriminant = b * b - 4 * a * c;
+    if (discriminant < 0) {
+        printf("실근이 없습니다.\\n");
+        return 0;
+    }
+
+    solution1 = (-b + sqrt(discriminant)) / (2 * a);
+    solution2 = (-b - sqrt(discriminant)) / (2 * a);
+    check1 = a * solution1 * solution1 + b * solution1 + c;
+    check2 = a * solution2 * solution2 + b * solution2 + c;
+
+    printf("해1 : %.3lf\\n", solution1);
+    printf("검증 계산 : %.3lf\\n", check1);
+    printf("해2 : %.3lf\\n", solution2);
+    printf("검증 계산 : %.3lf\\n", check2);
+    return 0;
+}`,out:`해1 : 0.851
+검증 계산 : 0.000
+해2 : -2.351
+검증 계산 : 0.000`,exp:'D = 9 + 32 = 41. 판별식으로 실근 존재를 먼저 확인하고, 구한 해를 식에 대입해 0이 나오는지 검증한다.'},
+  {ch:6,no:'6.8',t:'윤년 판별 (if)',q:'표준입력으로 받은 연도가 윤년인지 if 문을 사용하여 판단하시오.',
+   hint:'4의 배수이면서 100의 배수가 아니거나, 400의 배수.',
+   code:`#include <stdio.h>
+
+int main() {
+    int year = 0;
+
+    printf("연도입력: ");
+    scanf(" %d", &year);
+
+    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+        printf("%d 년은 윤년입니다.", year);
+    } else {
+        printf("%d 년은 윤년이 아닙니다.", year);
+    }
+    return 0;
+}`,out:`연도입력: 2020
+2020 년은 윤년입니다.`,exp:'1900은 100의 배수라 윤년 아님, 2000은 400의 배수라 윤년.'},
+  {ch:6,no:'6.9',t:'월의 말일 (switch)',q:'입력 받은 연도와 달을 이용하여 그 달의 말일을 switch 문으로 출력하시오.',
+   hint:'case 여러 개를 이어 붙여 같은 코드를 공유 (fall-through 활용). 2월은 윤년 검사.',
+   code:`#include <stdio.h>
+
+int main() {
+    int year = 0, month = 0;
+
+    printf("년과 월을 입력하면 그 달의 말일을 알려드립니다.\\n");
+    printf("2003 2 : 입력 >> ");
+    scanf(" %d %d", &year, &month);
+
+    switch (month) {
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+            printf("%d년 %d월의 말일은 31일입니다.\\n", year, month);
+            break;
+        case 4: case 6: case 9: case 11:
+            printf("%d년 %d월의 말일은 30일입니다.\\n", year, month);
+            break;
+        case 2:
+            if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+                printf("%d년 %d월의 말일은 29일입니다.\\n", year, month);
+            } else {
+                printf("%d년 %d월의 말일은 28일입니다.\\n", year, month);
+            }
+            break;
+    }
+    return 0;
+}`,out:`2003 2 : 입력 >> 2020 2
+2020년 2월의 말일은 29일입니다.`,exp:'break 없는 빈 case가 다음 case로 흘러가는 성질을 이용해 31일·30일 달을 묶었다.'},
+  {ch:6,no:'6.10',t:'섭씨 ↔ 화씨 변환',q:'문자 하나와 온도(실수)를 입력 받아, F/f이면 화씨→섭씨, C/c이면 섭씨→화씨로 변환하시오. F = (9.0/5.0)×C + 32, C = (5.0/9.0)×(F − 32)',
+   hint:"case 'F': case 'f': 처럼 대소문자를 함께 처리. 5/9 대신 5.0/9.0!",
+   code:`#include <stdio.h>
+
+int main() {
+    char unit = ' ';
+    float temp = 0, result = 0;
+
+    printf("문자 입력 >> ");
+    scanf(" %c", &unit);
+    printf("온도 입력 >> ");
+    scanf(" %f", &temp);
+
+    switch (unit) {
+        case 'F': case 'f':
+            result = (5.0 / 9.0) * (temp - 32);
+            printf("화씨온도 %.2f는 섭씨온도로 %.2f입니다.", temp, result);
+            break;
+        case 'C': case 'c':
+            result = (9.0 / 5.0) * temp + 32;
+            printf("섭씨온도 %.2f는 화씨온도로 %.2f입니다.", temp, result);
+            break;
+        default:
+            printf("문자 입력 오류.");
+            break;
+    }
+    return 0;
+}`,out:`문자 입력 >> F
+온도 입력 >> 100
+화씨온도 100.00는 섭씨온도로 37.78입니다.`,exp:"switch의 case에 문자 상수('F')를 쓸 수 있다. default로 잘못된 입력 처리."},
+  {ch:7,no:'7.10',t:'1~100 소수 출력',q:'1부터 100까지 정수 중에서 소수(prime number)를 출력하시오.',
+   hint:'바깥 for: 2~100, 안쪽 for: 2~i−1로 나눠 보기. 나누어 떨어지면 break.',
+   code:`#include <stdio.h>
+
+int main() {
+    int count = 0;
+    printf("2부터 100까지의 소수\\n");
+    for (int i = 2; i <= 100; i++) {
+        int is_prime = 1;
+        for (int j = 2; j < i; j++) {
+            if (i % j == 0) {
+                is_prime = 0;
+                break;
+            }
+        }
+        if (is_prime) {
+            printf("%2d\\t", i);
+            count++;
+            if (count % 10 == 0) {
+                printf("\\n");
+            }
+        }
+    }
+    return 0;
+}`,out:`2부터 100까지의 소수
+ 2   3   5   7  11  13  17  19  23  29
+31  37  41  43  47  53  59  61  67  71
+73  79  83  89  97`,exp:'is_prime 플래그 + break 로 불필요한 반복을 줄였다. count % 10 == 0 일 때 줄바꿈 → 10개씩 출력. 1~100 소수는 25개.'},
+  {ch:7,no:'7.12',t:'1~10년 복리 표',q:'원금 1,000,000원, 이율 4.5% 복리로 예치 기간 1년~10년 매년 말 총 금액을 출력하시오.',
+   hint:'5.8 코드를 for (i = 1; i <= 10; i++) 로 감싼다.',
+   code:`#include <math.h>
+#include <stdio.h>
+
+int main() {
+    int principal = 1000000;
+    const double interest_rate = 0.045;
+    double total_amount = 0;
+
+    for (int i = 1; i <= 10; i++) {
+        total_amount = principal * pow(1 + interest_rate, i);
+        printf("%2d년 총금액: %.2f\\n", i, total_amount);
+    }
+    return 0;
+}`,out:` 1년 총금액: 1045000.00
+ 2년 총금액: 1092025.00
+ 3년 총금액: 1141166.12
+ 4년 총금액: 1192518.60
+ 5년 총금액: 1246181.94
+ 6년 총금액: 1302260.12
+ 7년 총금액: 1360861.83
+ 8년 총금액: 1422100.61
+ 9년 총금액: 1486095.14
+10년 총금액: 1552969.42`,exp:'%2d로 년도를 2자리 폭에 맞춰 정렬했다.'},
+  {ch:7,no:'7.15',t:'숫자 피라미드 (중첩 for)',q:'중첩된 for 문을 이용하여 아래 모양을 출력하시오. (필요하면 abs() 사용)\n\n       0\n      101\n     21012\n    3210123\n   432101234\n  54321012345\n 6543210123456\n765432101234567',
+   hint:'한 줄의 칸 번호 column(0~7+row)에서 가운데(7)까지의 거리 |column − 7| 이 출력할 숫자. column < 7 − row 이면 공백.',
+   code:`#include <stdio.h>
+#include <stdlib.h>   /* abs() — 수업에선 math.h로 표기 */
+
+int main() {
+    for (int row = 0; row <= 7; row++) {
+        for (int column = 0; column <= 7 + row; column++) {
+            if (column < 7 - row) {
+                putchar(' ');
+            } else {
+                int number = abs(column - 7);
+                printf("%d", number);
+            }
+        }
+        putchar('\\n');
+    }
+    return 0;
+}`,out:`       0
+      101
+     21012
+    3210123
+   432101234
+  54321012345
+ 6543210123456
+765432101234567`,exp:'바깥 for는 8줄, 안쪽 for는 각 칸이 공백인지 숫자인지 판단. 가운데 칸(7)과의 거리가 곧 숫자. 참고로 정수 abs()는 표준상 <stdlib.h>에 선언되어 있다.'},
+];
+function renderEx() {
+  const box = $('#ex-list');
+  EX.forEach(x => {
+    const a = el('article', 'ex');
+    const h = el('div', 'ex-h');
+    h.append(el('span', 'badge c' + x.ch, '연습 ' + x.no), el('h3', null, x.t));
+    const b = el('div', 'ex-b');
+    const q = el('p', null, x.q); q.style.whiteSpace = 'pre-wrap'; b.append(q);
+    const mk = (title, ...nodes) => { const d = el('details'); d.append(el('summary', null, title)); const w = el('div'); w.append(...nodes); d.append(w); return d; };
+    const pre = (txt, cls) => { const p = el('pre', cls); p.append(el('code', null, txt)); return p; };
+    b.append(
+      mk('힌트', el('p', 'point', x.hint)),
+      mk('풀이 코드 · 실행 결과 · 해설', pre(x.code), el('p', 'point', '실행 결과'), pre(x.out, 'out'), el('p', 'point', x.exp))
+    );
+    a.append(h, b); box.append(a);
+  });
+}
+
+/* ---------- 문제은행 ---------- */
+// t: mc(객관식, a=정답 index) | ox(a=true/false) | sa(단답, a=허용 답 목록)
+const Q = [
+  {ch:1,t:'mc',q:'C언어는 언어 수준으로 분류할 때 어디에 속하는가?',o:['기계어','저급 언어','중급 언어','고급 언어'],a:2,e:'C는 하드웨어 제어와 고급 언어의 편의성을 함께 제공하는 중급 언어.'},
+  {ch:1,t:'mc',q:'명령어 전체를 한 번에 기계어로 번역하는 방식은?',o:['인터프리터','컴파일러','링커','로더'],a:1,e:'컴파일러는 전체 번역, 인터프리터는 한 줄씩 번역·실행.'},
+  {ch:1,t:'ox',q:'인터프리터는 컴파일 단계를 거치지 않지만 실행 시간이 느리다.',a:true,e:'인터프리터의 장점은 컴파일 단계 생략, 단점은 느린 실행 속도.'},
+  {ch:1,t:'mc',q:'다음 중 인터프리터 방식 언어의 예로 수업에서 제시된 것은?',o:['C','Python','어셈블리어','기계어'],a:1,e:'컴파일러 예: C / 인터프리터 예: Python.'},
+  {ch:1,t:'sa',q:"ASCII 코드에서 문자 'A'의 10진수 코드값은?",a:['65'],e:"'A' = 65, 'a' = 97."},
+  {ch:1,t:'sa',q:"ASCII 코드에서 문자 'a'의 10진수 코드값은?",a:['97'],e:"소문자는 대문자 + 32."},
+  {ch:1,t:'mc',q:'ASCII는 8bit 중 몇 bit를 데이터 비트로 사용하는가?',o:['6bit','7bit','8bit','16bit'],a:1,e:'8bit 중 7bit만 데이터 비트로 사용.'},
+  {ch:1,t:'mc',q:'알고리즘을 만드는 원리가 아닌 것은?',o:['문제분해','순차','반복','컴파일'],a:3,e:'원리: 문제분해, 순차, 조건, 반복.'},
+  {ch:1,t:'mc',q:'알고리즘의 표현 방법이 아닌 것은?',o:['자연어','의사코드','순서도','목적 코드'],a:3,e:'표현 방법: 자연어, 의사코드, 순서도.'},
+  {ch:1,t:'mc',q:'소프트웨어 개발 과정의 올바른 순서는?',o:['설계 → 요구사항 분석 → 구현 → 검증 → 유지보수','요구사항 분석 → 설계 → 구현 → 검증 → 유지보수','요구사항 분석 → 구현 → 설계 → 검증 → 유지보수','설계 → 구현 → 요구사항 분석 → 유지보수 → 검증'],a:1,e:'문제를 먼저 파악(요구분석)하고 설계 후 구현·검증·유지보수.'},
+  {ch:1,t:'mc',q:'조건의 참·거짓에 따라 흐름이 분기됨을 나타내는 순서도 기호는?',o:['평행사변형','마름모','육각형','원'],a:1,e:'마름모 = 조건·의사 결정(Decision).'},
+  {ch:1,t:'mc',q:'변수 기억 장소 할당, 초기값 설정을 나타내는 순서도 기호는?',o:['준비 (육각형)','처리 (직사각형)','단자 (둥근 사각형)','입출력 (평행사변형)'],a:0,e:'준비(Preparation) 기호는 육각형.'},
+  {ch:1,t:'mc',q:'다른 곳에 정의된 서브프로그램이나 함수를 호출함을 나타내는 기호는?',o:['서류','정의된 처리','화면 표시','수동 입력'],a:1,e:'양옆에 세로줄이 있는 사각형 = 정의된 처리(Predefined process).'},
+  {ch:1,t:'ox',q:'연결자(원) 기호는 다른 페이지로 이어지는 흐름을 나타낸다.',a:false,e:'연결자는 같은 페이지 안, 다른 페이지는 페이지 연결자(Off-page connector).'},
+  {ch:1,t:'mc',q:'순서도의 시작과 끝을 나타내는 기호는?',o:['단자','처리','준비','주석'],a:0,e:'단자(Terminator) — 둥근 사각형.'},
+  {ch:2,t:'ox',q:'하나의 C 프로그램에는 main() 함수가 여러 개 있어도 된다.',a:false,e:'실행 시작점인 main()은 단 한 개만 있어야 한다.'},
+  {ch:2,t:'mc',q:'컴파일 후 일반적으로 생성되는 목적 파일의 확장자는?',o:['.c','.obj','.exe','.h'],a:1,e:'소스(.c) → 컴파일 → 목적 파일(.obj) → 링크 → 실행 파일(.exe).'},
+  {ch:2,t:'mc',q:'프로그램 구현 과정의 올바른 순서는?',o:['소스 편집 → 링크 → 컴파일 → 로드 → 실행','소스 편집 → 컴파일 → 링크 → 로드 → 실행','컴파일 → 소스 편집 → 링크 → 실행 → 로드','소스 편집 → 컴파일 → 로드 → 링크 → 실행'],a:1,e:'편집 → 컴파일(.obj) → 링크(실행 파일) → 로드 → 실행.'},
+  {ch:2,t:'mc',q:'구문(문법) 오류를 확인하는 주체는?',o:['컴파일러','링크 에디터','로더','CPU'],a:0,e:'컴파일 시간 오류 = 문법 오류, 컴파일러가 확인.'},
+  {ch:2,t:'mc',q:'논리 오류·설계 오류는 언제 드러나는 오류인가?',o:['컴파일 시간','링크 시간','실행 시간','전처리 시간'],a:2,e:'실행 시간 오류 — 실행 환경과 개발자가 확인.'},
+  {ch:2,t:'mc',q:'실행 파일을 메모리에 적재하는 것은?',o:['컴파일러','링크 에디터','로더','전처리기'],a:2,e:'로드 단계: 로더 모듈이 실행 파일을 메모리에 적재.'},
+  {ch:2,t:'sa',q:'편집기, 컴파일러, 디버거 등을 한 환경에서 제공하는 통합 개발 환경의 약어는? (영문 3글자)',a:['ide','통합개발환경'],e:'IDE (Integrated Development Environment). 예: Visual Studio.'},
+  {ch:3,t:'mc',q:'long long int 자료형의 서식 지정자는?',o:['%d','%ld','%lld','%lf'],a:2,e:'int %d / long %ld / long long %lld.'},
+  {ch:3,t:'mc',q:'double 변수에 scanf로 값을 입력 받을 때 쓰는 서식 지정자는?',o:['%f','%lf','%d','%e'],a:1,e:'double 입력은 반드시 %lf. 출력은 %f, %lf 모두 가능.'},
+  {ch:3,t:'ox',q:'unsigned 정수형은 음수를 저장할 수 없다.',a:true,e:'맨 앞 비트를 부호로 쓰지 않으므로 음수 불가.'},
+  {ch:3,t:'sa',q:'다음 코드의 출력은?',code:'printf("%d", 021);',a:['17'],e:'021은 8진수: 2×8 + 1 = 17.'},
+  {ch:3,t:'sa',q:'다음 코드의 출력은?',code:'printf("%d", 0x1b);',a:['27'],e:'0x1b는 16진수: 1×16 + 11 = 27.'},
+  {ch:3,t:'mc',q:'8bit 2의 보수로 표현할 수 있는 범위는?',o:['−127 ~ 127','−128 ~ 127','−128 ~ 128','0 ~ 255'],a:1,e:'−2^(k−1) ~ 2^(k−1)−1 → −128 ~ 127.'},
+  {ch:3,t:'mc',q:'8bit unsigned 정수의 표현 범위는?',o:['0 ~ 127','0 ~ 255','−128 ~ 127','1 ~ 256'],a:1,e:'0 ~ 2^k − 1 → 0 ~ 255.'},
+  {ch:3,t:'mc',q:'8bit 부호와 절대치 방식의 표현 범위는?',o:['−127 ~ 127','−128 ~ 127','−255 ~ 255','0 ~ 255'],a:0,e:'−(2^(k−1)−1) ~ 2^(k−1)−1 → −127 ~ 127. (+0, −0 두 개 존재)'},
+  {ch:3,t:'sa',q:'−9를 6비트 2의 보수로 나타내면? (6자리 2진수)',a:['110111'],e:'+9 = 001001 → 반전 110110 (1의 보수) → +1 = 110111.'},
+  {ch:3,t:'sa',q:'−12를 6비트 1의 보수로 나타내면? (6자리 2진수)',a:['110011'],e:'+12 = 001100 → 비트 반전 = 110011.'},
+  {ch:3,t:'sa',q:'−5를 8비트 2의 보수로 나타내면? (8자리 2진수)',a:['11111011'],e:'+5 = 00000101 → 반전 11111010 → +1 = 11111011.'},
+  {ch:3,t:'mc',q:'+0과 −0이 서로 다른 비트로 존재하는 방식을 모두 고른 것은?',o:['2의 보수만','부호와 절대치, 1의 보수','1의 보수, 2의 보수','세 방식 모두'],a:1,e:'2의 보수는 0이 하나뿐이라 음수 쪽이 하나 더 넓다.'},
+  {ch:3,t:'mc',q:'16진수를 대문자(A~F)로 출력하는 서식 지정자는?',o:['%x','%X','%o','%E'],a:1,e:'%x 소문자, %X 대문자.'},
+  {ch:4,t:'mc',q:'헤더 파일을 불러오는 전처리 지시자는?',o:['#define','#include','#import','#header'],a:1,e:'#include <헤더파일>. #define은 매크로 상수 정의.'},
+  {ch:4,t:'mc',q:'다음 코드의 출력은? (␣는 공백)',code:'printf("[%5d]", 42);',o:['[42␣␣␣]','[␣␣␣42]','[00042]','[42]'],a:1,e:'폭 5, 기본 우측 정렬 → 앞에 공백 3칸.'},
+  {ch:4,t:'mc',q:'다음 코드의 출력은? (␣는 공백)',code:'printf("[%-5d]", 42);',o:['[42␣␣␣]','[␣␣␣42]','[-42]','[−00042]'],a:0,e:'- flag = 좌측 정렬 → 뒤에 공백 3칸.'},
+  {ch:4,t:'mc',q:'다음 코드의 출력은?',code:'printf("%07.2f", 3.14159);',o:['3.14','0003.14','3.14000','0000003'],a:1,e:'전체 폭 7, 소수 둘째 자리 "3.14"(4칸) → 0 flag로 앞 3칸을 0으로.'},
+  {ch:4,t:'mc',q:'다음 코드의 출력은?',code:'printf("%#x", 255);',o:['ff','0xff','0XFF','#ff'],a:1,e:'# flag는 16진수 앞에 0x를 붙인다.'},
+  {ch:4,t:'mc',q:'다음 코드의 출력은?',code:'printf("%#o", 8);',o:['8','10','010','0o10'],a:2,e:'8 = 8진수 10, # flag로 리딩 0 → 010.'},
+  {ch:4,t:'ox',q:'scanf()로 int 변수에 입력 받을 때 변수 이름 앞에 &를 붙여야 한다.',a:true,e:'scanf("%d", &year); — 변수의 주소를 넘겨야 값을 저장할 수 있다.'},
+  {ch:4,t:'mc',q:'printf에서 % 문자 자체를 출력하려면?',o:['\\%','%%','%c','"%"'],a:1,e:'"4.5%%" → 4.5%'},
+  {ch:4,t:'mc',q:'숫자 앞에 항상 부호(+/−)를 표시하는 flag는?',o:['-','+','0','#'],a:1,e:'"%+d", 42 → +42'},
+  {ch:4,t:'mc',q:"다음 코드에 문자 '$'(ASCII 36)를 입력했을 때 출력은?",code:'printf("%c %#o %d %#x", c, c, c, c);',o:['$ 044 36 0x24','$ 44 36 24','$ 036 36 0x36','36 044 $ 0x24'],a:0,e:'36 = 8진수 44 = 16진수 24 (연습문제 4.4).'},
+  {ch:5,t:'mc',q:'다음 코드의 출력은?',code:'int a = 7, b = 2;\nprintf("%d %d", a / b, a % b);',o:['3.5 1','3 1','3 2','4 1'],a:1,e:'정수 / 정수 = 몫(3), % = 나머지(1).'},
+  {ch:5,t:'mc',q:'x = 5일 때 y = x++; 실행 후 x, y 값은?',o:['x=5, y=5','x=6, y=5','x=6, y=6','x=5, y=6'],a:1,e:'후위: y에 5를 대입한 뒤 x가 6이 된다.'},
+  {ch:5,t:'mc',q:'x = 5일 때 y = ++x; 실행 후 x, y 값은?',o:['x=5, y=5','x=6, y=5','x=6, y=6','x=5, y=6'],a:2,e:'전위: x를 6으로 만든 뒤 y에 대입.'},
+  {ch:5,t:'ox',q:'printf("%d", ++300); 은 올바른 코드이다.',a:false,e:'증감연산자는 상수에 사용할 수 없다.'},
+  {ch:5,t:'ox',q:'a = (a+1)--; 는 올바른 코드이다.',a:false,e:'증감연산자는 일반 수식에 사용할 수 없다 (변수에만).'},
+  {ch:5,t:'sa',q:'다음 식의 값은?',code:'3 + 4 * 2',a:['11'],e:'* 가 + 보다 우선 → 3 + 8 = 11.'},
+  {ch:5,t:'mc',q:'(int)3.99 의 값은?',o:['3','4','3.99','오류'],a:0,e:'내림변환 — 소수 부분은 버려진다 (반올림 아님).'},
+  {ch:5,t:'mc',q:'다음 코드의 출력은?',code:'double c = 5 / 9 * (100 - 32);\nprintf("%.1f", c);',o:['37.8','0.0','68.0','37.0'],a:1,e:'5 / 9 는 정수 나눗셈 → 0. 0 × 68 = 0. 5.0 / 9.0 으로 써야 37.8.'},
+  {ch:5,t:'mc',q:'수업에서 정리한 연산 순서로 올바른 것은?',o:['산술 → 관계 → 논리 → 삼항 → 대입','관계 → 산술 → 논리 → 대입 → 삼항','논리 → 관계 → 산술 → 삼항 → 대입','대입 → 산술 → 관계 → 논리 → 삼항'],a:0,e:'전위증감·형변환 → 산술 → 관계 → 논리 → 삼항 → 대입 → 후위증감.'},
+  {ch:5,t:'ox',q:'C언어에는 정수 나눗셈 연산자 // 가 있다.',a:false,e:'C에 // 연산자는 없다 (//는 주석). 정수끼리 / 하면 몫.'},
+  {ch:5,t:'mc',q:'큰 범주의 자료형에서 작은 범주의 자료형으로의 변환은?',o:['올림변환','내림변환','명시적 변환','묵시적 변환'],a:1,e:'내림변환 — 범위 밖 데이터는 버려진다.'},
+  {ch:5,t:'sa',q:'pow(), sqrt() 함수를 사용하려면 포함해야 하는 헤더 파일은?',a:['math.h','#includemath.h'],e:'#include <math.h>'},
+  {ch:5,t:'mc',q:'원금 1,000,000원, 연 4.5% 복리로 2년 후 금액은?',o:['1,090,000','1,092,025','1,045,000','1,094,500'],a:1,e:'1,000,000 × 1.045² = 1,092,025.'},
+  {ch:6,t:'mc',q:'다음 코드의 출력은?',code:'int n = 2;\nswitch (n) {\n    case 1: printf("A");\n    case 2: printf("B");\n    case 3: printf("C"); break;\n    default: printf("D");\n}',o:['B','BC','BCD','ABC'],a:1,e:'case 2부터 break를 만날 때까지 실행 → B, C.'},
+  {ch:6,t:'ox',q:'switch 문의 case 값으로 실수 상수(예: 1.5)를 사용할 수 있다.',a:false,e:'case 값은 정수 또는 문자형 상수만 가능.'},
+  {ch:6,t:'ox',q:'switch 문의 default는 반드시 맨 마지막에 위치해야 한다.',a:false,e:'default는 생략 가능하고 위치 제한도 없다.'},
+  {ch:6,t:'mc',q:'다음 중 윤년이 아닌 해는?',o:['2000','2020','1900','2024'],a:2,e:'1900은 100의 배수이고 400의 배수가 아니므로 평년.'},
+  {ch:6,t:'mc',q:'a = 3, b = 7일 때 (a > b) ? a : b 의 값은?',o:['3','7','0','1'],a:1,e:'조건이 거짓이므로 : 뒤의 b(7).'},
+  {ch:6,t:'mc',q:'score = 85 일 때 출력은?',code:'if (score >= 90) printf("A");\nelse if (score >= 80) printf("B");\nelse if (score >= 70) printf("C");\nelse printf("F");',o:['A','B','BC','BCF'],a:1,e:'처음 참이 된 조건(>= 80)의 블록 하나만 실행.'},
+  {ch:6,t:'ox',q:'if 문에서 else는 반드시 작성해야 한다.',a:false,e:'else는 필수가 아니다.'},
+  {ch:6,t:'mc',q:"문자 unit에 대해 'F' 또는 'f'를 같은 코드로 처리하는 switch 작성법은?",o:["case 'F' || 'f':","case 'F': case 'f':","case 'F', 'f':","case ('F' && 'f'):"],a:1,e:'빈 case를 이어 붙이면 아래 case로 흘러간다 (연습문제 6.10).'},
+  {ch:7,t:'mc',q:'조건이 처음부터 거짓이어도 반복 몸체가 최소 한 번 실행되는 반복문은?',o:['for','while','do while','모두 해당 없음'],a:2,e:'do while은 실행 후 조건을 검사한다.'},
+  {ch:7,t:'mc',q:'다음 코드 실행 후 sum의 값은?',code:'int sum = 0;\nfor (int i = 0; i < 5; i++) {\n    if (i == 3) continue;\n    sum += i;\n}',o:['10','7','6','3'],a:1,e:'i = 3일 때만 건너뜀 → 0+1+2+4 = 7.'},
+  {ch:7,t:'mc',q:'다음 코드 실행 후 count의 값은?',code:'int count = 0;\nfor (int i = 0; i < 3; i++)\n    for (int j = 0; j < 3; j++) {\n        if (j == 1) break;\n        count++;\n    }',o:['1','3','6','9'],a:1,e:'break는 가장 가까운(안쪽) 반복만 탈출 → 바깥 반복마다 1번씩, 총 3.'},
+  {ch:7,t:'mc',q:'for (i = 1; i <= 10; i += 3) 의 반복 횟수는?',o:['3번','4번','10번','5번'],a:1,e:'i = 1, 4, 7, 10 → 4번.'},
+  {ch:7,t:'ox',q:'for 문의 초기값, 반복조건, 증감은 생략할 수 있다.',a:true,e:'생략도, 2개 이상 사용도 가능 (모두 생략하면 무한 반복).'},
+  {ch:7,t:'mc',q:'while (0) { printf("hi"); } 에서 hi가 출력되는 횟수는?',o:['0번','1번','무한','컴파일 오류'],a:0,e:'while은 먼저 검사 — 조건이 거짓이면 한 번도 실행하지 않는다.'},
+  {ch:7,t:'mc',q:'do { printf("hi"); } while (0); 에서 hi가 출력되는 횟수는?',o:['0번','1번','무한','컴파일 오류'],a:1,e:'do while은 최소 1번 실행.'},
+  {ch:7,t:'sa',q:'2부터 20까지 정수 중 소수의 개수는?',a:['8'],e:'2, 3, 5, 7, 11, 13, 17, 19 → 8개.'},
+  {ch:7,t:'mc',q:'함수 실행을 곧바로 종료하고 호출한 곳으로 값을 돌려주는 문장은?',o:['break','continue','return','exit'],a:2,e:'return — 함수 종료 + 값 반환.'},
+  {ch:7,t:'sa',q:'다음 코드의 출력은?',code:'int i;\nfor (i = 0; i < 5; i++);\nprintf("%d", i);',a:['5'],e:'for 뒤 세미콜론 때문에 몸체가 비어 있다. 반복이 끝나면 i = 5.'},
+  {ch:7,t:'ox',q:'중첩된 반복문 안쪽에서 break를 만나면 모든 반복문이 한 번에 종료된다.',a:false,e:'가장 근접한(안쪽) 반복만 중단된다.'},
+];
+Q.forEach((q, i) => q.id = i);
+let qzCh = 'all', qzOrder = Q.map((_, i) => i), qzWrongOnly = false;
+const result = {}; // id -> true/false
+const norm = s => String(s).toLowerCase().replace(/[\s<>]/g, '');
+
+function updateScore() {
+  const vis = qzOrder.filter(i => qzCh === 'all' || String(Q[i].ch) === qzCh);
+  const done = vis.filter(i => i in result), ok = done.filter(i => result[i]);
+  $('#s-ok').textContent = ok.length; $('#s-done').textContent = done.length; $('#s-all').textContent = vis.length;
+  $('#s-bar').style.width = (vis.length ? ok.length / vis.length * 100 : 0) + '%';
+}
+function grade(card, q, correct, fb) {
+  result[q.id] = correct;
+  card.classList.add(correct ? 'right' : 'wrong');
+  fb.querySelector('.verdict').textContent = correct ? '정답!' : '오답 — 정답: ' + answerText(q);
+  fb.classList.add('show');
+  updateScore();
+}
+const answerText = q => q.t === 'mc' ? q.o[q.a] : q.t === 'ox' ? (q.a ? 'O' : 'X') : q.a[0];
+
+function renderQuiz() {
+  chips($('#qz-filter'), qzCh, k => { qzCh = k; renderQuiz(); });
+  $('#qz-wrong').classList.toggle('pri', qzWrongOnly);
+  const box = $('#qz-list'); box.innerHTML = '';
+  const list = qzOrder.filter(i => (qzCh === 'all' || String(Q[i].ch) === qzCh) && (!qzWrongOnly || result[i] === false));
+  if (!list.length) box.append(el('p', 'empty', qzWrongOnly ? '틀린 문제가 없습니다' : '문제가 없습니다.'));
+  list.forEach((i, n) => {
+    const q = Q[i], card = el('div', 'q');
+    const meta = el('div', 'meta');
+    meta.append(el('span', null, 'Q' + (n + 1)), el('span', null, 'CH ' + CH[q.ch]), el('span', null, {mc:'객관식',ox:'OX',sa:'단답형'}[q.t]));
+    card.append(meta, el('p', 'text', q.q));
+    if (q.code) { const p = el('pre'); p.append(el('code', null, q.code)); card.append(p); }
+    const fb = el('div', 'fb'); fb.append(el('div', 'verdict'), el('div', 'exp', '해설 · ' + q.e));
+    const answered = i in result;
+
+    if (q.t === 'sa') {
+      const row = el('div', 'sa'), inp = el('input'), btn = el('button', 'btn pri', '확인');
+      inp.placeholder = '답 입력'; inp.setAttribute('aria-label', '답 입력'); inp.autocapitalize = 'off';
+      const go = () => { if (!inp.value.trim() || inp.disabled) return; inp.disabled = btn.disabled = true; grade(card, q, q.a.some(a => norm(a) === norm(inp.value)), fb); };
+      btn.onclick = go; inp.onkeydown = e => { if (e.key === 'Enter') go(); };
+      row.append(inp, btn); card.append(row);
+      if (answered) { inp.disabled = btn.disabled = true; inp.value = result[i] ? q.a[0] : ''; }
+    } else {
+      const opts = q.t === 'ox' ? ['O', 'X'] : q.o;
+      const wrap = el('div', 'opts' + (q.t === 'ox' ? ' ox' : ''));
+      const btns = opts.map((label, k) => {
+        const b = el('button', 'opt');
+        if (q.code && q.t === 'mc') { b.append(el('span', 'm', label)); } else b.textContent = (q.t === 'mc' ? (k + 1) + '. ' : '') + label;
+        return b;
+      });
+      const correctIdx = q.t === 'ox' ? (q.a ? 0 : 1) : q.a;
+      const lock = picked => { btns.forEach((b, k) => { b.disabled = true; if (k === correctIdx) b.classList.add('ans'); else if (k === picked) b.classList.add('bad'); }); };
+      btns.forEach((b, k) => b.onclick = () => { lock(k); grade(card, q, k === correctIdx, fb); });
+      wrap.append(...btns); card.append(wrap);
+      if (answered) lock(-1);
+    }
+    card.append(fb);
+    if (answered) { card.classList.add(result[i] ? 'right' : 'wrong'); fb.querySelector('.verdict').textContent = result[i] ? '정답!' : '오답 — 정답: ' + answerText(q); fb.classList.add('show'); }
+    box.append(card);
+  });
+  updateScore();
+}
+$('#qz-shuffle').onclick = () => { shuffle(qzOrder); renderQuiz(); };
+$('#qz-wrong').onclick = () => { qzWrongOnly = !qzWrongOnly; renderQuiz(); };
+$('#qz-reset').onclick = () => { for (const k in result) delete result[k]; qzWrongOnly = false; qzOrder = Q.map((_, i) => i); renderQuiz(); };
+
+renderCards(); renderEx(); renderQuiz(); route();
+</script>
+</body>
+</html>
