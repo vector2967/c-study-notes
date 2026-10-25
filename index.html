@@ -149,6 +149,31 @@ details>div{padding:0 14px 12px}
 .right .verdict{color:var(--ok)} .wrong .verdict{color:var(--err)}
 .empty{text-align:center;color:var(--steel);padding:40px 0}
 
+/* notes sidebar */
+.chapter h4,.chapter .ex{scroll-margin-top:68px}
+.chapter .ex{margin:16px 0}
+.side-head{display:flex;justify-content:space-between;align-items:center;padding:4px 10px 8px;font:600 11px/1 var(--font);letter-spacing:1px;color:var(--steel)}
+.side-x{display:none;border:1px solid var(--hairline);background:var(--canvas);border-radius:var(--r-sm);padding:7px 10px;font:500 13px/1 var(--font);color:var(--ink);cursor:pointer}
+#side-nav a{display:block;text-decoration:none;color:var(--slate);font-size:13.5px;line-height:1.35;padding:6px 10px;border-radius:var(--r-sm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#side-nav a:hover{background:var(--surface);color:var(--ink)}
+#side-nav .side-ch{font-weight:600;color:var(--ink);margin-top:10px}
+#side-nav .side-sec{padding-left:22px}
+#side-nav .side-ex{padding-left:22px;font-size:12.5px;color:var(--primary)}
+#side-nav a.on{background:var(--lavender);color:var(--primary-pressed);font-weight:600}
+.side-btn{position:fixed;right:16px;bottom:20px;z-index:20;display:inline-flex;gap:8px;align-items:center;background:var(--ink);color:#fff;border:0;border-radius:999px;padding:13px 18px;font:600 14px/1 var(--font);box-shadow:0 6px 20px rgba(0,0,0,.18);cursor:pointer}
+.side-back{position:fixed;inset:0;background:rgba(10,21,48,.4);z-index:29;opacity:0;pointer-events:none;transition:opacity .2s}
+.side-back.open{opacity:1;pointer-events:auto}
+@media (min-width:1180px){
+  #notes.on{display:grid;grid-template-columns:232px minmax(0,1fr);gap:28px;margin-left:calc(-1 * min(260px, (100vw - 920px) / 2))}
+  .side{position:sticky;top:68px;align-self:start;max-height:calc(100vh - 84px);overflow-y:auto;padding:0 8px 20px 0;border-right:1px solid var(--hairline)}
+  .side-btn,.side-back{display:none}
+}
+@media (max-width:1179px){
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(320px,86vw);z-index:30;background:var(--canvas);overflow-y:auto;padding:16px 12px 32px;transform:translateX(-102%);visibility:hidden;transition:transform .25s ease,visibility .25s;box-shadow:4px 0 24px rgba(0,0,0,.12)}
+  .side.open{transform:none;visibility:visible}
+  .side-x{display:inline-block}
+}
+
 footer{border-top:1px solid var(--hairline);color:var(--steel);font-size:13px;text-align:center;padding:24px 16px}
 
 @media (max-width:600px){
@@ -184,6 +209,13 @@ footer{border-top:1px solid var(--hairline);color:var(--steel);font-size:13px;te
 
 <!-- ================= 정리 노트 ================= -->
 <section class="page" id="notes">
+  <aside class="side" id="side" aria-label="정리 노트 목차">
+    <div class="side-head"><span>목차</span><button class="side-x" id="side-close" aria-label="목차 닫기">닫기</button></div>
+    <nav id="side-nav"></nav>
+  </aside>
+  <div class="side-back" id="side-back"></div>
+  <button class="side-btn" id="side-btn" aria-label="목차 열기"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h8"/></svg>목차</button>
+  <div class="notes-main">
   <div class="page-head"><h2>정리 노트</h2><p>수업 내용을 챕터별로 빠짐없이 정리했습니다.</p></div>
   <div class="toc">
     <a class="chip" href="#n1">01 언어 개요</a><a class="chip" href="#n2">02 C 시작</a><a class="chip" href="#n3">03 자료형·변수</a><a class="chip" href="#n4">04 전처리·입출력</a><a class="chip" href="#n5">05 연산자</a><a class="chip" href="#n6">06 조건</a><a class="chip" href="#n7">07 반복</a>
@@ -332,6 +364,8 @@ int main(void) {
         <li>상수 표기: 8진수는 앞에 <code>0</code> (예 <code>021</code>), 16진수는 <code>0x</code> (예 <code>0x1b</code>)</li>
         <li><code>const</code> 상수 — 값을 바꿀 수 없는 변수. 예: <code>const double mileConversion = 0.6213721;</code></li>
       </ul>
+      <div class="ex-slot" data-ex="3.1"></div>
+      <div class="ex-slot" data-ex="3.9"></div>
       <h4>컴퓨터에서 숫자 표기법</h4>
       <ul>
         <li><b>부호와 절대치</b> — 맨 앞 비트 0이면 양수, 1이면 음수. 나머지 비트로 절댓값 표현</li>
@@ -368,6 +402,7 @@ int main(void) {
         <li>헤더파일을 불러오는 지시자: <code>#include &lt;헤더파일&gt;</code></li>
         <li>매크로 상수를 정의하는 지시자: <code>#define 이름 값</code> (예 <code>#define EXCHANGE_RATE 1120.0</code>)</li>
       </ul>
+      <div class="ex-slot" data-ex="3.12"></div>
       <h4>출력 함수 printf()</h4>
       <ul>
         <li>형태: <code>printf(형식문자열, 출력목록);</code></li>
@@ -387,6 +422,8 @@ int main(void) {
         <li><code>%%</code> — % 문자 자체를 출력 (예: <code>"4.5%%"</code> → 4.5%)</li>
         <li><code>%12.3lf</code> — 폭 12, 소수 셋째 자리, 우측 정렬 / <code>%-12.3lf</code> — 좌측 정렬</li>
       </ul>
+      <div class="ex-slot" data-ex="4.4"></div>
+      <div class="ex-slot" data-ex="4.5"></div>
       <h4>입력 함수 scanf()</h4>
       <ul>
         <li>형태: <code>scanf(형식문자열, 입력변수목록);</code></li>
@@ -395,6 +432,7 @@ int main(void) {
       </ul>
       <h4>문자 입출력</h4>
       <ul><li><code>getchar()</code> — 문자 하나 입력 / <code>putchar(c)</code> — 문자 하나 출력</li></ul>
+      <div class="ex-slot" data-ex="4.8"></div>
     </div>
   </article>
 
@@ -429,10 +467,13 @@ int main(void) {
         <li><b>묵시적 형변환</b> — 컴파일러가 자동 수행</li>
       </ul>
       <div class="note"><b>실수 연산 팁</b> — <code>4/3</code>은 정수 나눗셈이라 1이 된다. 실수 결과가 필요하면 <code>4.0/3.0</code>처럼 쓴다 (연습문제 5.4, 6.10).</div>
+      <div class="ex-slot" data-ex="5.4"></div>
       <h4>연산 순서</h4>
       <p class="point"><b>증감(전위), 형변환</b> → <b>산술</b> → <b>관계</b> → <b>논리</b> → <b>삼항</b> → <b>대입</b> → <b>증감(후위)</b></p>
       <h4>수학 함수 (<code>#include &lt;math.h&gt;</code>)</h4>
       <ul><li><code>pow(a, b)</code> = a<sup>b</sup>, <code>sqrt(x)</code> = √x</li><li>복리: 원금 × (1 + 이율)<sup>년</sup> → <code>principal * pow(1 + rate, years)</code></li></ul>
+      <div class="ex-slot" data-ex="5.8"></div>
+      <div class="ex-slot" data-ex="5.10"></div>
     </div>
   </article>
 
@@ -453,6 +494,7 @@ int main(void) {
 } else {
     실행할 코드3
 }</code></pre>
+      <div class="ex-slot" data-ex="6.8"></div>
       <h4>switch 문</h4>
       <ul>
         <li>식의 결과에 따라 코드를 실행</li>
@@ -470,6 +512,8 @@ int main(void) {
     default:
         실행할 코드3
 }</code></pre>
+      <div class="ex-slot" data-ex="6.9"></div>
+      <div class="ex-slot" data-ex="6.10"></div>
       <h4>조건연산자 (삼항연산자)</h4>
       <p><code>조건 ? 참일 때 값 : 거짓일 때 값</code> — 예: <code>max = (a &gt; b) ? a : b;</code></p>
       <h4>자주 나오는 조건식</h4>
@@ -490,6 +534,7 @@ int main(void) {
         <tr><td>while</td><td>실행 <b>전에</b> 조건 검사 → 0번 실행될 수도 있음</td><td class="mono">while (조건) { ... }</td></tr>
         <tr><td>do while</td><td>한 번 실행 <b>후</b> 조건 검사 → <b>최소 1번</b> 실행</td><td class="mono">do { ... } while (조건);</td></tr>
       </table></div>
+      <div class="ex-slot" data-ex="7.12"></div>
       <h4>분기문 — 정해진 장소로 이동하는 구조</h4>
       <ul>
         <li><b>break</b> — 반복 중단. 중첩 반복문에서는 <b>가장 가까운</b> 반복만 중단</li>
@@ -504,8 +549,11 @@ int main(void) {
     }
     if (is_prime) printf("%d ", i);
 }</code></pre>
+      <div class="ex-slot" data-ex="7.10"></div>
+      <div class="ex-slot" data-ex="7.15"></div>
     </div>
   </article>
+  </div>
 </section>
 
 <!-- ================= 요약 노트 ================= -->
@@ -1020,9 +1068,7 @@ int main() {
  6543210123456
 765432101234567`,exp:'바깥 for는 8줄, 안쪽 for는 각 칸이 공백인지 숫자인지 판단. 가운데 칸(7)과의 거리가 곧 숫자. 참고로 정수 abs()는 표준상 <stdlib.h>에 선언되어 있다.'},
 ];
-function renderEx() {
-  const box = $('#ex-list');
-  EX.forEach(x => {
+function exCard(x) {
     const a = el('article', 'ex');
     const h = el('div', 'ex-h');
     h.append(el('span', 'badge c' + x.ch, '연습 ' + x.no), el('h3', null, x.t));
@@ -1034,8 +1080,47 @@ function renderEx() {
       mk('힌트', el('p', 'point', x.hint)),
       mk('풀이 코드 · 실행 결과 · 해설', pre(x.code), el('p', 'point', '실행 결과'), pre(x.out, 'out'), el('p', 'point', x.exp))
     );
-    a.append(h, b); box.append(a);
+    a.append(h, b); return a;
+}
+function renderEx() {
+  EX.forEach(x => $('#ex-list').append(exCard(x)));
+  // 정리 노트 본문 사이사이 연습문제
+  document.querySelectorAll('.ex-slot').forEach(s => { const c = exCard(EX.find(x => x.no === s.dataset.ex)); c.id = 'nex-' + s.dataset.ex.replace('.', '-'); s.replaceWith(c); });
+}
+
+/* ---------- 정리 노트 사이드 목차 ---------- */
+const side = $('#side'), sideBack = $('#side-back');
+const closeSide = () => { side.classList.remove('open'); sideBack.classList.remove('open'); };
+$('#side-btn').onclick = () => { side.classList.add('open'); sideBack.classList.add('open'); };
+$('#side-close').onclick = sideBack.onclick = closeSide;
+addEventListener('keydown', e => { if (e.key === 'Escape') closeSide(); });
+function buildSide() {
+  const nav = $('#side-nav'), links = [];
+  const add = (cls, text, target) => { const a = el('a', cls, text); a.href = '#' + target.id; nav.append(a); links.push([a, target]); };
+  document.querySelectorAll('#notes .chapter').forEach(ch => {
+    add('side-ch', ch.querySelector('.no').textContent.replace('CHAPTER ', '') + '  ' + ch.querySelector('h3').textContent, ch);
+    ch.querySelectorAll('h4, .ex').forEach((t, k) => {
+      if (!t.id) t.id = ch.id + '-' + k;
+      if (t.classList.contains('ex')) add('side-ex', t.querySelector('.badge').textContent + ' · ' + t.querySelector('h3').textContent, t);
+      else add('side-sec', t.textContent, t);
+    });
   });
+  nav.onclick = e => { if (e.target.closest('a')) closeSide(); };
+  // scroll spy: 화면 위쪽을 지난 마지막 항목을 강조
+  let raf = 0, cur = null;
+  addEventListener('scroll', () => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      if (!$('#notes').classList.contains('on')) return;
+      let hit = links[0];
+      for (const l of links) if (l[1].getBoundingClientRect().top < 120) hit = l;
+      if (hit === cur) return;
+      cur?.[0].classList.remove('on'); hit[0].classList.add('on'); cur = hit;
+      const y = hit[0].offsetTop;
+      if (y < side.scrollTop + 40 || y > side.scrollTop + side.clientHeight - 60) side.scrollTop = y - side.clientHeight / 2;
+    });
+  }, { passive: true });
 }
 
 /* ---------- 문제은행 ---------- */
@@ -1185,7 +1270,7 @@ $('#qz-shuffle').onclick = () => { shuffle(qzOrder); renderQuiz(); };
 $('#qz-wrong').onclick = () => { qzWrongOnly = !qzWrongOnly; renderQuiz(); };
 $('#qz-reset').onclick = () => { for (const k in result) delete result[k]; qzWrongOnly = false; qzOrder = Q.map((_, i) => i); renderQuiz(); };
 
-renderCards(); renderEx(); renderQuiz(); route();
+renderCards(); renderEx(); buildSide(); renderQuiz(); route();
 </script>
 </body>
 </html>
